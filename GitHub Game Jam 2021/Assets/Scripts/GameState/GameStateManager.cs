@@ -20,10 +20,29 @@ public class GameStateManager : MonoBehaviour {
         } else {
             _instance = this;
             DontDestroyOnLoad(gameObject);
+            LoadDefaultState();
+            StartCoroutine(LogGameStateEvery10Seconds());
         }
+    }
+
+    void LoadDefaultState() {
+        _state = new GameState();
+        _state.bees.Add(new Bee());
+    }
+
+
+    public string GetStateAsJson() {
+        return JsonUtility.ToJson(state);
     }
 
     public void UpdateStateFromJson(string jsonState) {
         state = JsonUtility.FromJson<GameState>(jsonState);
+    }
+
+    IEnumerator LogGameStateEvery10Seconds() {
+        while (true) {
+            Debug.Log(GetStateAsJson());
+            yield return new WaitForSeconds(10);
+        }
     }
 }
