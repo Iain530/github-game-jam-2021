@@ -6,6 +6,7 @@ using UnityEngine;
 
 [Serializable]
 public class GameState {
+    public int gameId;
     public Bee[] bees;
     public Task[] tasks;
 }

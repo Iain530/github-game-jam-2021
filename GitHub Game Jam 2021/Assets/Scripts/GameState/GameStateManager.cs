@@ -23,7 +23,7 @@ public class GameStateManager : MonoBehaviour {
         }
     }
 
-    public void LoadState(string jsonState) {
+    public void UpdateStateFromJson(string jsonState) {
         state = JsonUtility.FromJson<GameState>(jsonState);
     }
 }
