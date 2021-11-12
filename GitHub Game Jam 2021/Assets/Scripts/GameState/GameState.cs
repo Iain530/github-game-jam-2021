@@ -29,6 +29,7 @@ public class Task {
 }
 
 
+[Serializable]
 public class Player {
     public int id;
     public bool isQueenBee;
