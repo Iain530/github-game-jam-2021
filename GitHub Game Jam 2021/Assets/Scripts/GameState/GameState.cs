@@ -9,6 +9,7 @@ public class GameState {
     public int gameId;
     public Bee[] bees;
     public Task[] tasks;
+    public Player[] players;
 }
 
 
@@ -17,6 +18,7 @@ public class Bee {
     public int id;
     public string name = "";
     public Vector2 position;
+    public bool isPlayer;
 }
 
 
@@ -24,4 +26,10 @@ public class Bee {
 public class Task {
     public int id;
     public bool complete;
+}
+
+
+public class Player {
+    public int id;
+    public bool isQueenBee;
 }
