@@ -16,7 +16,7 @@ public class GameState {
 [Serializable]
 public class Bee {
     public int id;
-    public string name = "";
+    public string name;
     public Vector2 position;
     public bool isPlayer;
 }
