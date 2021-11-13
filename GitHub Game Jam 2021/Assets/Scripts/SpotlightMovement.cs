@@ -4,18 +4,18 @@ using UnityEngine;
 
 public class SpotlightMovement : MonoBehaviour
 {
-    // Start is called before the first frame update
+    public Transform targetCamera;
+    private Vector3 initalOffset;
+    private Vector3 cameraPosition;
+
     void Start()
     {
-        
+        initalOffset = transform.position - targetCamera.position;
     }
 
-    // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        Vector3 pos = Camera.main.WorldToViewportPoint(transform.position);         
-        pos.x = Mathf.Clamp01(pos.x);         
-        pos.y = Mathf.Clamp01(pos.y);         
-        transform.position = Camera.main.ViewportToWorldPoint(pos); 
+        cameraPosition = targetCamera.position + initalOffset;
+        transform.position = cameraPosition;
     }
 }
