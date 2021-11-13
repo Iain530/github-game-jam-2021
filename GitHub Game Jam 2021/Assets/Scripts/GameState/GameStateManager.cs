@@ -8,13 +8,13 @@ public class GameStateManager : MonoBehaviour {
     public static GameStateManager Instance { get { return _instance; } }
 
     private GameState _state;
-    private int _currentPlayerId;
+    private string _currentPlayerId;
     private string _currentGameId;
     private string _currentGameCode;
     private bool _isRoomOwner;
 
     public GameState state { get { return _state; } }
-    public int CurrentPlayerId { get { return _currentPlayerId; } }
+    public string CurrentPlayerId { get { return _currentPlayerId; } }
     public string CurrentGameID { get { return _currentGameId; } }
     public string CurrentGameCode { get { return _currentGameCode; } }
     public bool IsRoomOwner { get { return _isRoomOwner; } }

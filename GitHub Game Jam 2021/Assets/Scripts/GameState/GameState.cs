@@ -6,7 +6,7 @@ using UnityEngine;
 
 [Serializable]
 public class GameState {
-    public int gameId;
+    public string gameId;
     public int messageTime;
     public bool gameStarted;
     public List<Bee> bees = new List<Bee>();
@@ -17,7 +17,7 @@ public class GameState {
 
 [Serializable]
 public class Bee {
-    public int id;
+    public string id;
     public string name;
     public Vector2 position;
     public bool isPlayer;
@@ -26,15 +26,15 @@ public class Bee {
 
 [Serializable]
 public class Task {
-    public int id;
+    public string id;
     public bool complete;
 }
 
 
 [Serializable]
 public class Player {
-    public int id;
-    public int beeId;
-    public int currentTaskId;
+    public string id;
+    public string beeId;
+    public string currentTaskId;
     public bool isQueenBee;
 }

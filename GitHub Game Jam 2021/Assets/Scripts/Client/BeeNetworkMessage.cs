@@ -8,7 +8,7 @@ using UnityEngine;
 public class PlayerPositionMessage {
     public string messageType = "PLAYER_POSITION_UPDATE";
     public string gameId;
-    public int playerId;
+    public string playerId;
     public Vector2 position;
 
     public PlayerPositionMessage(Vector2 position) {
@@ -23,8 +23,8 @@ public class PlayerPositionMessage {
 public class TaskMessage {
     public string messageType = "TASK_UPDATE";
     public string gameId;
-    public int playerId;
-    public int taskId;
+    public string playerId;
+    public string taskId;
     public string taskStatus;
 }
 
@@ -33,7 +33,7 @@ public class TaskMessage {
 public class AiBeesPositionMessage {
     public string messageType = "AI_POSITION_UPDATE";
     public string gameId;
-    public int playerId;
+    public string playerId;
     public List<BeePosition> beePositions = new List<BeePosition>();
 
     public AiBeesPositionMessage(List<BeePosition> beePositions) {
@@ -46,7 +46,7 @@ public class AiBeesPositionMessage {
 
 [Serializable]
 public class BeePosition {
-    public int id;
+    public string id;
     public Vector2 position;
 
     public BeePosition(int id, Vector2 position) {

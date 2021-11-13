@@ -12,7 +12,6 @@ public class BeeNetworkClient : MonoBehaviour {
     public static BeeNetworkClient Instance { get { return _instance; } }
 
     int websocketPort = 8999;
-
     string serverHostname = "192.168.0.48";
     string joinPath = "/join";
     string createPath = "/create";
