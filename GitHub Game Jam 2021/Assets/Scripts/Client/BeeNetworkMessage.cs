@@ -19,11 +19,11 @@ public class JoinLobbyMessage {
 public class BeginGameMessage {
     public string messageType = "START_GAME";
     public string gameId;
-    public string playerId;
+    public string secretToken;
 
     public BeginGameMessage() {
         gameId = GameStateManager.Instance.CurrentGameID;
-        playerId = GameStateManager.Instance.CurrentPlayerId;
+        secretToken = GameStateManager.Instance.SecretToken;
     }
 }
 
@@ -32,12 +32,12 @@ public class BeginGameMessage {
 public class PlayerPositionMessage {
     public string messageType = "PLAYER_POSITION_UPDATE";
     public string gameId;
-    public string playerId;
+    public string secretToken;
     public Vector2 position;
 
     public PlayerPositionMessage(Vector2 position) {
         gameId = GameStateManager.Instance.CurrentGameID;
-        playerId = GameStateManager.Instance.CurrentPlayerId;
+        secretToken = GameStateManager.Instance.SecretToken;
         this.position = position;
     }
 }
@@ -47,12 +47,12 @@ public class PlayerPositionMessage {
 public class TaskCompleteMessage {
     public string messageType = "TASK_COMPLETE";
     public string gameId;
-    public string playerId;
+    public string secretToken;
     public string taskId;
 
     public TaskCompleteMessage(string taskId) {
         gameId = GameStateManager.Instance.CurrentGameID;
-        playerId = GameStateManager.Instance.CurrentPlayerId;
+        secretToken = GameStateManager.Instance.SecretToken;
         this.taskId = taskId;
     }
 }
@@ -62,12 +62,12 @@ public class TaskCompleteMessage {
 public class AiBeesPositionMessage {
     public string messageType = "AI_POSITION_UPDATE";
     public string gameId;
-    public string playerId;
-    public List<BeePosition> beePositions = new List<BeePosition>();
+    public string secretToken;
+    public Dictionary<string, BeePosition> beePositions = new Dictionary<string, BeePosition>();
 
-    public AiBeesPositionMessage(List<BeePosition> beePositions) {
+    public AiBeesPositionMessage(Dictionary<string, BeePosition> beePositions) {
         gameId = GameStateManager.Instance.CurrentGameID;
-        playerId = GameStateManager.Instance.CurrentPlayerId;
+        secretToken = GameStateManager.Instance.SecretToken;
         this.beePositions = beePositions;
     }
 }
