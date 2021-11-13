@@ -1,27 +1,30 @@
 <script lang="ts">
-	// const fetchGameState = 
-
-import { beforeUpdate } from "svelte"
-
-	let gameState = (async () => {
+	const fetchGameState = async () => {
 		const response = await fetch('http://192.168.0.48:8999/serverState?superSecretServerPassword=superSecretServerPassword')
     return await response.json()
-	})()
+	}
 
-	// setInterval(async () => {
-	// 	gameState = await fetchGameState()
-	// }, 10000)
+	let gameState = fetchGameState()
+
+	setInterval(async () => {
+		gameState = await fetchGameState()
+	}, 5000)
 </script>
+
+<svelte:head>
+<title>BEE Game Server Monitor</title>
+<meta name="robots" content="noindex nofollow" />
+<html lang="en" />
+</svelte:head>
 
 <main>
 	<h1>BEE Game Server Monitor</h1>
 	{#await gameState}
 		<p>...waiting</p>
 	{:then data}
-		<h2>Games:</h2>
+		<h2>Games: {data.gameState.length}</h2>
 		{#each data.gameState as game}
-			<p>ID: {game.gameId}</p>
-			<p>Code: {game.gameCode}</p>
+			<p>ID: {game.gameId} | Code: {game.gameCode} | Status: {game.gameStarted ? "Started" : "Not started"} </p>
 			<p>Players: {game.players.length}</p>
 			{#each game.players as player}
 				<p>ID: {player.id}</p>

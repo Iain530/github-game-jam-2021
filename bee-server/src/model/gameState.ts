@@ -50,10 +50,31 @@ export class GameStateManager {
 		}
 	}
 
-	startGame(gameId: any) {
+	public startGame(gameId: any) {
 		const gameState = this.getGameState(gameId)
 		gameState.gameStarted = true
 		gameState.broadcastToPlayers()
+	}
+
+	public updatePlayerPosition(gameId: string, playerId: string, pos: [number, number]): boolean {
+		const gameState = this.getGameState(gameId)
+		const player = gameState.players.find(player => player.id === playerId)
+		player.bee.position = pos
+		gameState.broadcastToPlayers()
+		return true
+	}
+
+	public completeTask(gameId: string, playerId: string, taskId: string): boolean {
+		const gameState = this.getGameState(gameId)
+		const player = gameState.players.find(player => player.id === playerId)
+		if(gameState.tasks[player.currentTaskIndex].id == taskId) {
+			gameState.tasks.find(task => task.id === taskId).complete = true
+			gameState.broadcastToPlayers()	
+			return true
+		} else {
+			console.error('TaskId does not match')
+			return false
+		}
 	}
 
 	public registerPlayerToGame(player: Player, code: string): GameState {
@@ -64,6 +85,17 @@ export class GameStateManager {
 		gameState.broadcastToPlayers()
 		this.printGameStates()
 		return gameState
+	}
+
+	public updateBeePosition(gameId: string, beeId: string, pos: [number, number]): void {
+		const gameState = this.getGameState(gameId)
+		const bee = gameState.bees.get(beeId)
+		bee.position = pos
+	}
+
+	public broadcastGameUpdates(gameId: string): void {
+		const gameState = this.getGameState(gameId)
+		gameState.broadcastToPlayers()
 	}
 
 	public deleteGameState(id: string): void {

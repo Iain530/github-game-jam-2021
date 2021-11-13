@@ -22,7 +22,7 @@ export class ClientsManager {
 	}
 
 	public addClient(playerID: string, client: WebSocket): Client {
-		const clientId = uuidv4()
+		const clientId = uuidv4() // this is also the secretToken
 		const newClient = new Client(clientId, playerID, client)
 		this.clients.set(clientId, newClient)
 
