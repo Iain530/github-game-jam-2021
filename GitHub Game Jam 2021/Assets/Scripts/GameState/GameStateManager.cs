@@ -7,11 +7,20 @@ public class GameStateManager : MonoBehaviour {
     private static GameStateManager _instance;
     public static GameStateManager Instance { get { return _instance; } }
 
-    private GameState _state;
-    public GameState state {
-        get { return _state; }
-        private set { _state = value; }
-    }
+    private GameState _state = new GameState();
+    private string _currentPlayerId;
+    private string _currentGameId;
+    private string _currentGameCode;
+    private bool _isRoomOwner;
+
+    public GameState state { get { return _state; } }
+    public string CurrentPlayerId { get { return _currentPlayerId; } }
+    public string CurrentGameID { get { return _currentGameId; } }
+    public string CurrentGameCode { get { return _currentGameCode; } }
+    public bool IsRoomOwner { get { return _isRoomOwner; } }
+
+    public delegate void Notify();
+    public event Notify GameStateUpdated;
 
     private void Awake() {
         if (_instance != null && _instance != this) {
@@ -20,14 +29,17 @@ public class GameStateManager : MonoBehaviour {
         } else {
             _instance = this;
             DontDestroyOnLoad(gameObject);
-            LoadDefaultState();
             StartCoroutine(LogGameStateEvery10Seconds());
         }
     }
 
-    void LoadDefaultState() {
-        _state = new GameState();
-        _state.bees.Add(new Bee());
+
+    public void JoinGame(string gameId, string playerId, string gameCode, bool isRoomOwner) {
+        Debug.Log("player id: " + playerId + " game id: " + gameId + " game code: " + gameCode);
+        _currentPlayerId = playerId;
+        _currentGameId = gameId;
+        _currentGameCode = gameCode;
+        _isRoomOwner = isRoomOwner;
     }
 
 
@@ -36,7 +48,15 @@ public class GameStateManager : MonoBehaviour {
     }
 
     public void UpdateStateFromJson(string jsonState) {
-        state = JsonUtility.FromJson<GameState>(jsonState);
+        GameState newState = JsonUtility.FromJson<GameStateUpdate>(jsonState).gameState;
+        if (newState.messageTime >= _state.messageTime) {
+            Debug.Log("Updated game state");
+            _state = newState;
+            GameStateUpdated?.Invoke();  // broadcast event
+            Debug.Log(state);
+        } else {
+            Debug.LogWarning("Received old state from server, discarding");
+        }
     }
 
     IEnumerator LogGameStateEvery10Seconds() {

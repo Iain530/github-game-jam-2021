@@ -5,32 +5,49 @@ using UnityEngine;
 
 
 [Serializable]
+public class GameStateUpdate {
+    public GameState gameState;
+}
+
+
+[Serializable]
 public class GameState {
-    public int gameId;
-    public List<Bee> bees = new List<Bee>();
+    public string gameId;
+    public string gameCode;
+    public int messageTime;
+    public bool gameStarted;
+    public Dictionary<string, Bee> bees = new Dictionary<string, Bee>();
     public List<Task> tasks = new List<Task>();
     public List<Player> players = new List<Player>();
+
+    public Vector2? GetBeePosition(string id) {
+        Bee bee;
+        bees.TryGetValue(id, out bee);
+        return bee?.position;
+    }
 }
 
 
 [Serializable]
 public class Bee {
-    public int id;
+    public string id;
+    public string hatName;
     public string name;
     public Vector2 position;
-    public bool isPlayer;
 }
 
 
 [Serializable]
 public class Task {
-    public int id;
+    public string id;  // for looking up task metadata
     public bool complete;
 }
 
 
 [Serializable]
 public class Player {
-    public int id;
+    public string id;
+    public Bee bee;
+    public int currentTaskIndex;
     public bool isQueenBee;
 }
