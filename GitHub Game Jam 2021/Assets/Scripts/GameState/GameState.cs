@@ -7,6 +7,8 @@ using UnityEngine;
 [Serializable]
 public class GameState {
     public int gameId;
+    public int messageTime;
+    public bool gameStarted;
     public List<Bee> bees = new List<Bee>();
     public List<Task> tasks = new List<Task>();
     public List<Player> players = new List<Player>();

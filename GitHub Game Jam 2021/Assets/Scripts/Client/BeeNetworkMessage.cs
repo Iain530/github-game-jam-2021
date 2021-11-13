@@ -4,42 +4,61 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-
-public interface BeeNetworkMessage {
-    string messageType { get; }
-}
-
-
 [Serializable]
-public class PlayerPositionMessage : BeeNetworkMessage {
-    public string messageType { get { return "PLAYER_POSITION_UPDATE"; } }
+public class PlayerPositionMessage {
+    public string messageType = "PLAYER_POSITION_UPDATE";
+    public string gameId;
     public int playerId;
     public Vector2 position;
 
-    public PlayerPositionMessage(int playerId, Vector2 position) {
-        this.playerId = playerId;
+    public PlayerPositionMessage(Vector2 position) {
+        gameId = GameStateManager.Instance.CurrentGameID;
+        playerId = GameStateManager.Instance.CurrentPlayerId;
         this.position = position;
     }
 }
 
 
 [Serializable]
-public class TaskMessage : BeeNetworkMessage {
-    public string messageType { get { return "TASK_UPDATE"; } }
+public class TaskMessage {
+    public string messageType = "TASK_UPDATE";
+    public string gameId;
+    public int playerId;
     public int taskId;
     public string taskStatus;
 }
 
 
 [Serializable]
-public class AiBeesPositionMessage : BeeNetworkMessage {
-    public string messageType { get { return "AI_POSITION_UPDATE"; } }
-    public List<BeePosition> bees = new List<BeePosition>();
+public class AiBeesPositionMessage {
+    public string messageType = "AI_POSITION_UPDATE";
+    public string gameId;
+    public int playerId;
+    public List<BeePosition> beePositions = new List<BeePosition>();
+
+    public AiBeesPositionMessage(List<BeePosition> beePositions) {
+        gameId = GameStateManager.Instance.CurrentGameID;
+        playerId = GameStateManager.Instance.CurrentPlayerId;
+        this.beePositions = beePositions;
+    }
 }
 
 
 [Serializable]
 public class BeePosition {
+    public int id;
     public Vector2 position;
-    public int beeId;
+
+    public BeePosition(int id, Vector2 position) {
+        this.id = id;
+        this.position = position;
+    }
+}
+
+
+[Serializable]
+public class ServerConnectResponse {
+    public string gameId;
+    public string gameCode;
+    public int playerId;
 }
