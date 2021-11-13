@@ -13,9 +13,13 @@ public class SpotlightMovement : MonoBehaviour
         initalOffset = transform.position - targetCamera.position;
     }
 
-    void FixedUpdate()
+    void Update()
     {
         cameraPosition = targetCamera.position + initalOffset;
         transform.position = cameraPosition;
+    }
+
+    void FixedUpdate()
+    {
     }
 }
