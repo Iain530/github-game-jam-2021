@@ -49,7 +49,7 @@ public class BeePosition {
     public string id;
     public Vector2 position;
 
-    public BeePosition(int id, Vector2 position) {
+    public BeePosition(string id, Vector2 position) {
         this.id = id;
         this.position = position;
     }

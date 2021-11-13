@@ -124,7 +124,7 @@ public class BeeNetworkClient : MonoBehaviour {
         var message = new AiBeesPositionMessage(
             bees.Select(bee => {
                 // TODO: get ai bee ids
-                int id = 0;
+                string id = "";
                 return new BeePosition(id, bee.transform.position);
             }).ToList()
         );

@@ -32,7 +32,7 @@ public class GameStateManager : MonoBehaviour {
     }
 
 
-    public void JoinGame(string gameId, int playerId, string gameCode, bool isRoomOwner) {
+    public void JoinGame(string gameId, string playerId, string gameCode, bool isRoomOwner) {
         Debug.Log("player id: " + playerId + " game id: " + gameId + " game code: " + gameCode);
         _currentPlayerId = playerId;
         _currentGameId = gameId;
