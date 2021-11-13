@@ -24,7 +24,7 @@ public class GameState {
     public List<Player> players = new List<Player>();
 
     public Vector2? GetBeePosition(string id) {
-        Bee bee = bees.Find(bee => bee.id == id);
+        Bee bee = players.Find(player => player.bee.id == id).bee;
         return bee.position;
     }
 }
