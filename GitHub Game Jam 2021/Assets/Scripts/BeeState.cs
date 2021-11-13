@@ -7,12 +7,19 @@ public class BeeState : MonoBehaviour {
     private string _id;
     public string Id { get { return _id; } }
 
+    private string _hatName;
+    public string HatName { get { return _hatName; } }
 
     GameStateManager stateManager;
 
     void Start() {
         stateManager = GameStateManager.Instance;
         stateManager.GameStateUpdated += UpdatePosition;
+    }
+
+    public void Initialize(string id, string hatName) {
+        _id = id;
+        _hatName = hatName;
     }
 
     public void UpdatePosition() {

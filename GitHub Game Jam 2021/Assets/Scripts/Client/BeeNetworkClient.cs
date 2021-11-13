@@ -11,6 +11,7 @@ public class BeeNetworkClient : MonoBehaviour {
     private static BeeNetworkClient _instance;
     public static BeeNetworkClient Instance { get { return _instance; } }
 
+    WebSocket websocket;
     int websocketPort = 8999;
     string serverHostname = "192.168.0.48";
     string joinPath = "/join";
@@ -21,7 +22,6 @@ public class BeeNetworkClient : MonoBehaviour {
         return "ws://" + serverHostname + ":" + websocketPort;
     }
 
-    WebSocket websocket;
 
     private void Awake() {
         if (_instance != null && _instance != this) {
