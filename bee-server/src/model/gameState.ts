@@ -1,4 +1,5 @@
 import { v4 as uuidv4 } from 'uuid'
+import { ClientsManager } from './clients'
 
 export class GameStateManager {
 	private static _instance: GameStateManager = new GameStateManager()
@@ -35,13 +36,24 @@ export class GameStateManager {
 		return this.gameStates.get(id)!
 	}
 
+	public getAllGameStates(): GameState[] {
+		return [...this.gameStates.values()]
+	}
+
 	public getGameStateWithCode(code: string): GameState {
 		const res = [...this.gameStates.values()].filter(gameState => gameState.gameCode === code)
 		if (res.length === 0) {
-			throw new Error('No game state found with code: ' + code)
+			return null
+			console.error('No game state found with code: ' + code)
 		} else {
 			return res[0]
 		}
+	}
+
+	startGame(gameId: any) {
+		const gameState = this.getGameState(gameId)
+		gameState.gameStarted = true
+		gameState.broadcastToPlayers()
 	}
 
 	public registerPlayerToGame(player: Player, code: string): GameState {
@@ -49,6 +61,7 @@ export class GameStateManager {
 		gameState.players.push(player)
 		gameState.bees.set(player.bee.id, player.bee)
 
+		gameState.broadcastToPlayers()
 		this.printGameStates()
 		return gameState
 	}
@@ -71,6 +84,12 @@ export class GameState {
 	constructor(hostPlayer: Player) {
 		this.players = [hostPlayer]
 		this.bees.set(hostPlayer.id, hostPlayer.bee)
+	}
+
+	broadcastToPlayers() {
+		for(const player of this.players) {
+			ClientsManager.instance.updateGameStateForPlayer(player.id, this)
+		}
 	}
 }
 

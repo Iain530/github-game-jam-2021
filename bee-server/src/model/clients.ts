@@ -1,3 +1,6 @@
+import { v4 as uuidv4 } from 'uuid'
+import { GameState } from './gameState'
+
 export class ClientsManager {
 	private static _instance: ClientsManager = new ClientsManager()
 	private constructor() {
@@ -10,7 +13,7 @@ export class ClientsManager {
 		return this._instance
 	}
 
-	private clients: Map<string, WebSocket> = new Map()
+	private clients: Map<string, Client> = new Map()
 	private printClients(): void {
 		console.log('Clients:')
 		for (const client of this.clients.entries()) {
@@ -18,9 +21,52 @@ export class ClientsManager {
 		}
 	}
 
-	public addClient(playerID: string, client: WebSocket): void {
-		this.clients.set(playerID, client)
+	public addClient(playerID: string, client: WebSocket): Client {
+		const clientId = uuidv4()
+		const newClient = new Client(clientId, playerID, client)
+		this.clients.set(clientId, newClient)
 
 		this.printClients()
+		return newClient
+	}
+
+	public getClient(clientId: string): Client {
+		if (this.clients.has(clientId)) {
+			return this.clients.get(clientId)
+		} else {
+			console.error("Unknown client " + clientId)
+			return null
+		}
+	}
+
+	public getClientByPlayerID(playerID: string): Client {
+		for (const client of this.clients.values()) {
+			if (client.playerId === playerID) {
+				return client
+			}
+		}
+		return null
+	}
+
+	public updateGameStateForPlayer(playerId: string, gameState: GameState): void {
+		const client = this.getClientByPlayerID(playerId)
+		if (client) {
+			client.socket.send(JSON.stringify({
+				messageType: 'GAME_STATE_UPDATE',
+				gameState
+			}))
+		}
+	}
+}
+
+export class Client {
+	public secretToken: string
+	public playerId: string
+	public socket: WebSocket
+
+	constructor(secretToken: string, playerId: string, socket: WebSocket) {
+		this.secretToken = secretToken
+		this.playerId = playerId
+		this.socket = socket
 	}
 }

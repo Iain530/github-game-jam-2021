@@ -3,8 +3,16 @@ import * as http from 'http';
 import WebSocket, { Server } from "ws";
 import { ClientsManager } from './model/clients';
 import { GameState, GameStateManager, Player } from './model/gameState';
+import { joinGameHandler, startGameHandler } from './model/socketMessageHandlers';
 
 const app = express();
+
+let allowCrossDomain = function(req, res, next) {
+  res.header('Access-Control-Allow-Origin', "*");
+  res.header('Access-Control-Allow-Headers', "*");
+  next();
+}
+app.use(allowCrossDomain);
 
 app.get('/createGame', (req, res) => {
 	const hostPlayer = new Player()
@@ -31,6 +39,19 @@ app.get('/joinGame', (req, res) => {
 	})
 })
 
+app.get('/serverState', (req, res) => {
+	const superSecretServerPassword = req.query.superSecretServerPassword?.toString()!
+	if(superSecretServerPassword !== 'superSecretServerPassword') {
+		res.json({
+			error: 'Invalid superSecretServerPassword'
+		})
+	} else {
+		res.json({
+			gameState: GameStateManager.instance.getAllGameStates()
+		})
+	}
+})
+
 //initialize a simple http server
 const server = http.createServer(app);
 
@@ -43,13 +64,18 @@ wss.on('connection', (ws: any) => { // This ws should have type WebSocket
 
 		switch (data.messageType) {
 			case 'JOIN_GAME_LOBBY':
-				ClientsManager.instance.addClient(data.playerId, ws)
-				ws.send(JSON.stringify({
-					gameState: GameStateManager.instance.getGameState(data.gameId)
-				}))
+				joinGameHandler(ws, data)
+				break
+			case 'START_GAME':
+				startGameHandler(ws, data)
 				break
 			default:
-				throw new Error(`Unknown message type: ${data.messageType}`)
+				console.error(`Unknown message type: ${data.messageType}`)
+				ws.send(JSON.stringify({
+					success: false,
+					error: `Unknown message type: ${data.messageType}`
+				}))
+				break
 		}
 	});
 });
