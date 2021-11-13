@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class PressSpaceTaskBehaviour : TaskBehaviour
 {
 
-    private Transform spaceCountText;
+    private Text spaceCountText;
 
     private int spacePressCountTarget = 10;
     private int spacePressCount = 0;
@@ -14,7 +14,7 @@ public class PressSpaceTaskBehaviour : TaskBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        spaceCountText = this.gameObject.transform.GetChild(0).GetChild(2);
+        spaceCountText = this.gameObject.transform.GetChild(0).GetChild(2).GetComponent<Text>();
         base.Start();
     }
 
@@ -35,7 +35,7 @@ public class PressSpaceTaskBehaviour : TaskBehaviour
             	completeTask();
             	hideUI();
             } else {
-            	spaceCountText.GetComponent<Text>().text = spacePressCount + " / " + spacePressCountTarget;
+            	spaceCountText.text = spacePressCount + " / " + spacePressCountTarget;
             }
         }
     }
@@ -49,6 +49,6 @@ public class PressSpaceTaskBehaviour : TaskBehaviour
     
     private void reset() {
         spacePressCount = 0;
-        spaceCountText.GetComponent<Text>().text = spacePressCount + " / " + spacePressCountTarget;
+        spaceCountText.text = spacePressCount + " / " + spacePressCountTarget;
     }
 }
