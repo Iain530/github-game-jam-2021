@@ -24,6 +24,7 @@ public class GameState {
 [Serializable]
 public class Bee {
     public string id;
+    public string hatName;
     public string name;
     public Vector2 position;
 }
@@ -31,7 +32,7 @@ public class Bee {
 
 [Serializable]
 public class Task {
-    public string id;
+    public string id;  // for looking up task metadata
     public bool complete;
 }
 
