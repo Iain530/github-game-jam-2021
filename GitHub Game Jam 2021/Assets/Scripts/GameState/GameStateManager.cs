@@ -8,10 +8,10 @@ public class GameStateManager : MonoBehaviour {
     public static GameStateManager Instance { get { return _instance; } }
 
     private GameState _state;
-    public GameState state {
-        get { return _state; }
-        private set { _state = value; }
-    }
+    private int _currentPlayerId;
+
+    public GameState state { get { return _state; } }
+    public int CurrentPlayerId { get { return _currentPlayerId; } }
 
     private void Awake() {
         if (_instance != null && _instance != this) {
@@ -25,18 +25,22 @@ public class GameStateManager : MonoBehaviour {
         }
     }
 
-    void LoadDefaultState() {
-        _state = new GameState();
-        _state.bees.Add(new Bee());
-    }
 
+    public void SetCurrentPlayerId(int id) {
+        Debug.Log("Current player id set: " + id);
+        _currentPlayerId = id;
+    }
 
     public string GetStateAsJson() {
         return JsonUtility.ToJson(state);
     }
 
     public void UpdateStateFromJson(string jsonState) {
-        state = JsonUtility.FromJson<GameState>(jsonState);
+        _state = JsonUtility.FromJson<GameState>(jsonState);
+    }
+    void LoadDefaultState() {
+        _state = new GameState();
+        _state.bees.Add(new Bee());
     }
 
     IEnumerator LogGameStateEvery10Seconds() {
