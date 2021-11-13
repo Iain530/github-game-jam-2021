@@ -15,6 +15,18 @@ public class JoinLobbyMessage {
     }
 }
 
+[Serializable]
+public class BeginGameMessage {
+    public string messageType = "START_GAME";
+    public string gameId;
+    public string playerId;
+
+    public BeginGameMessage() {
+        gameId = GameStateManager.Instance.CurrentGameID;
+        playerId = GameStateManager.Instance.CurrentPlayerId;
+    }
+}
+
 
 [Serializable]
 public class PlayerPositionMessage {

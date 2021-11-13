@@ -14,7 +14,9 @@ public class BeeState : MonoBehaviour {
 
     void Start() {
         stateManager = GameStateManager.Instance;
-        stateManager.GameStateUpdated += UpdatePosition;
+        if (!stateManager.IsRoomOwner) {
+            stateManager.GameStateUpdated += UpdatePosition;
+        }
     }
 
     public void Initialize(string id, string hatName) {
