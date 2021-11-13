@@ -138,6 +138,12 @@ public class BeeNetworkClient : MonoBehaviour {
         SendJsonMessage(message);
     }
 
+
+    public void SendTaskComplete(string id) {
+        var message = new TaskCompleteMessage(id);
+        SendJsonMessage(message);
+    }
+
     async void SendJsonMessage(object message) {
         if (websocket.State == WebSocketState.Open) {
             string json = JsonUtility.ToJson(message);
