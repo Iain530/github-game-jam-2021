@@ -5,6 +5,12 @@ using UnityEngine;
 
 
 [Serializable]
+public class GameStateUpdate {
+    public GameState gameState;
+}
+
+
+[Serializable]
 public class GameState {
     public string gameId;
     public string gameCode;

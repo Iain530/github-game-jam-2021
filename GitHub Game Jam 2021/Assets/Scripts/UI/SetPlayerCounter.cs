@@ -9,11 +9,11 @@ public class SetPlayerCounter : MonoBehaviour {
     GameStateManager stateManager;
 
     void Start() {
-        stateManager = GameStateManager.Instance;
+        // stateManager 
         counter = GetComponent<Text>();
     }
 
     void Update() {
-        counter.text = stateManager.state.players.Count.ToString();
+        counter.text = GameStateManager.Instance.state.players.Count.ToString();
     }
 }

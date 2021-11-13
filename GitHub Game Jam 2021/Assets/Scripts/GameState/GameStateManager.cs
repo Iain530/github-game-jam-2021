@@ -7,7 +7,7 @@ public class GameStateManager : MonoBehaviour {
     private static GameStateManager _instance;
     public static GameStateManager Instance { get { return _instance; } }
 
-    private GameState _state;
+    private GameState _state = new GameState();
     private string _currentPlayerId;
     private string _currentGameId;
     private string _currentGameCode;
@@ -29,7 +29,6 @@ public class GameStateManager : MonoBehaviour {
         } else {
             _instance = this;
             DontDestroyOnLoad(gameObject);
-            LoadDefaultState();
             StartCoroutine(LogGameStateEvery10Seconds());
         }
     }
@@ -49,17 +48,15 @@ public class GameStateManager : MonoBehaviour {
     }
 
     public void UpdateStateFromJson(string jsonState) {
-        GameState newState = JsonUtility.FromJson<GameState>(jsonState);
+        GameState newState = JsonUtility.FromJson<GameStateUpdate>(jsonState).gameState;
         if (newState.messageTime >= _state.messageTime) {
+            Debug.Log("Updated game state");
             _state = newState;
             GameStateUpdated?.Invoke();  // broadcast event
+            Debug.Log(state);
         } else {
             Debug.LogWarning("Received old state from server, discarding");
         }
-    }
-    void LoadDefaultState() {
-        _state = new GameState();
-        _state.bees.Add("1", new Bee());
     }
 
     IEnumerator LogGameStateEvery10Seconds() {

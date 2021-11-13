@@ -105,7 +105,7 @@ public class BeeNetworkClient : MonoBehaviour {
             Debug.Log("OnMessage! " + message);
 
             // Update the game state from the server
-            // GameStateManager.Instance.UpdateStateFromJson(message);    
+            GameStateManager.Instance.UpdateStateFromJson(message);    
         };
 
         // waiting for messages
