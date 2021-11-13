@@ -140,7 +140,7 @@ public class BeeNetworkClient : MonoBehaviour {
 
 
     public void SendTaskComplete(string id) {
-        var message = new TaskCompleteMessag(id);
+        var message = new TaskCompleteMessage(id);
         SendJsonMessage(message);
     }
 
