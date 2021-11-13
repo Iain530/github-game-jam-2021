@@ -11,12 +11,14 @@ public class GameStateManager : MonoBehaviour {
     private string _currentPlayerId;
     private string _currentGameId;
     private string _currentGameCode;
+    private string _secretToken;
     private bool _isRoomOwner;
 
     public GameState state { get { return _state; } }
     public string CurrentPlayerId { get { return _currentPlayerId; } }
     public string CurrentGameID { get { return _currentGameId; } }
     public string CurrentGameCode { get { return _currentGameCode; } }
+    public string SecretToken { get { return _secretToken; } }
     public bool IsRoomOwner { get { return _isRoomOwner; } }
 
     public delegate void Notify();
@@ -48,14 +50,24 @@ public class GameStateManager : MonoBehaviour {
     }
 
     public void UpdateStateFromJson(string jsonState) {
-        GameState newState = JsonUtility.FromJson<GameStateUpdate>(jsonState).gameState;
-        if (newState.messageTime >= _state.messageTime) {
-            Debug.Log("Updated game state");
-            _state = newState;
-            GameStateUpdated?.Invoke();  // broadcast event
-            Debug.Log(state);
+        GameStateUpdate message = JsonUtility.FromJson<GameStateUpdate>(jsonState);
+
+        if (message.secretToken != null && message.secretToken != "") {
+            _secretToken = message.secretToken;
+        }
+
+        if (message.success) {
+            GameState newState = message.gameState;
+            if (newState.messageTime >= _state.messageTime) {
+                Debug.Log("Updated game state");
+                _state = newState;
+                GameStateUpdated?.Invoke();  // broadcast event
+                Debug.Log(state);
+            } else {
+                Debug.LogWarning("Received old state from server, discarding");
+            }
         } else {
-            Debug.LogWarning("Received old state from server, discarding");
+            Debug.LogError("Recieved failure state from server: " + jsonState);
         }
     }
 
