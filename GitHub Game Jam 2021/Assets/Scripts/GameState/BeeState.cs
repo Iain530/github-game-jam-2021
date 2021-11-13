@@ -24,7 +24,7 @@ public class BeeState : MonoBehaviour {
     }
 
     public void Initialize(Bee bee) {
-        _isCurrentPlayer = stateManager.IsCurrentPlayer(bee.id);
+        _isCurrentPlayer = GameStateManager.Instance.IsCurrentPlayer(bee.id);
         _isOtherPlayer = bee.isPlayer && !_isCurrentPlayer;
 
         _id = bee.id;

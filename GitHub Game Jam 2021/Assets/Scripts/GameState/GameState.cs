@@ -19,14 +19,13 @@ public class GameState {
     public string gameCode;
     public int messageTime;
     public bool gameStarted;
-    public Dictionary<string, Bee> bees = new Dictionary<string, Bee>();
+    public List<Bee> bees = new List<Bee>();
     public List<Task> tasks = new List<Task>();
     public List<Player> players = new List<Player>();
 
     public Vector2? GetBeePosition(string id) {
-        Bee bee;
-        bees.TryGetValue(id, out bee);
-        return bee?.position;
+        Bee bee = bees.Find(bee => bee.id == id);
+        return bee.position;
     }
 }
 

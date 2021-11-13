@@ -17,8 +17,8 @@ public class BeeSpawner : MonoBehaviour {
     }
 
     public void OnGameStateUpdate() {
-        foreach (KeyValuePair<string, Bee> entry in stateManager.state.bees) {
-            Bee bee = entry.Value;
+        foreach (Player p in stateManager.state.players) {
+            Bee bee = p.bee;
             if (!bees.ContainsKey(bee.id)) {
                 GameObject instance;
                 if (stateManager.IsCurrentPlayer(bee.id)) {
@@ -28,9 +28,11 @@ public class BeeSpawner : MonoBehaviour {
                     // spawn other bee
                     instance = Instantiate(otherBeePrefab, transform);
                 }
+                Debug.Log(JsonUtility.ToJson(bee));
                 BeeState beeState = instance.GetComponent<BeeState>();
                 beeState.Initialize(bee);
                 bees.Add(bee.id, beeState);
+                Debug.Log(bees.Count);
             }
         }        
     }
