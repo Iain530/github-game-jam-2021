@@ -7,6 +7,7 @@ public class TaskBehaviour : MonoBehaviour
 {
 
     protected Transform canvas;
+    private TaskState taskState;
     
     protected bool playerPresent;
     private bool uiVisible;
@@ -15,6 +16,7 @@ public class TaskBehaviour : MonoBehaviour
     // Start is called before the first frame update
     protected void Start()
     {
+        taskState = GetComponent<TaskState>();
         canvas = this.gameObject.transform.GetChild(0);
         hideUI();
     }
@@ -67,5 +69,10 @@ public class TaskBehaviour : MonoBehaviour
     
     public void setComplete() {
         complete = true;
+    }
+    
+    protected void completeTask() {
+    	setComplete();
+        taskState.OnComplete();
     }
 }

@@ -32,7 +32,7 @@ public class PressSpaceTaskBehaviour : TaskBehaviour
         if (Input.GetKeyDown("space") && playerPresent) {
             spacePressCount++;
             if (spacePressCount >= spacePressCountTarget) {
-            	base.setComplete();
+            	completeTask();
             	hideUI();
             } else {
             	spaceCountText.text = spacePressCount + " / " + spacePressCountTarget;
