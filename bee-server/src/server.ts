@@ -1,8 +1,34 @@
 import * as express from 'express';
 import * as http from 'http';
 import * as WebSocket from 'ws';
+import { GameState, GameStateManager, Player } from './model/gameState';
 
 const app = express();
+
+app.get('/createGame', (req, res) => {
+	const hostPlayer = new Player()
+
+	const gs = GameStateManager.instance.createGameState(hostPlayer)
+
+	res.json({
+		gameId: gs.gameId,
+		gameCode: gs.gameCode,
+		playerId: hostPlayer.id
+	})
+})
+
+app.get('/joinGame', (req, res) => {
+	const gameCode = req.query.gameCode?.toString()!
+	const player = new Player()
+
+	const gs = GameStateManager.instance.registerPlayerToGame(player, gameCode)
+
+	res.json({
+		gameId: gs.gameId,
+		gameCode: gs.gameCode,
+		playerId: player.id
+	})
+})
 
 //initialize a simple http server
 const server = http.createServer(app);
