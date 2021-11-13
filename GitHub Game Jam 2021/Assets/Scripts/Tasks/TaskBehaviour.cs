@@ -6,26 +6,21 @@ using UnityEngine.UI;
 public class TaskBehaviour : MonoBehaviour
 {
 
-    private Transform canvas;
-    private Text spaceCountText;
+    protected Transform canvas;
     
-    private bool playerPresent;
+    protected bool playerPresent;
     private bool uiVisible;
-    private bool complete;
-    
-    private int spacePressCountTarget = 10;
-    private int spacePressCount = 0;
+    protected bool complete;
 
     // Start is called before the first frame update
-    void Start()
+    protected void Start()
     {
         canvas = this.gameObject.transform.GetChild(0);
-        spaceCountText = GameObject.Find("Space Count").GetComponent<Text>();
         hideUI();
     }
 
     // Update is called once per frame
-    void Update()
+    protected void Update()
     {
         if (Input.GetKeyDown("e") && !complete)
         {
@@ -35,27 +30,16 @@ public class TaskBehaviour : MonoBehaviour
                 showUI();
             }
         }
-        
-        if (Input.GetKeyDown("space") && playerPresent) {
-            spacePressCount++;
-            if (spacePressCount >= spacePressCountTarget) {
-            	complete = true;
-            	hideUI();
-            } else {
-            	spaceCountText.text = spacePressCount + " / " + spacePressCountTarget;
-            }
-        }
     }
     
     private void OnTriggerEnter2D(Collider2D other)
     {
-    	if (complete) return;
     	if (other.gameObject.tag == "Player") {
     	    playerPresent = true;
     	}
     }
     
-    private void OnTriggerExit2D(Collider2D other)
+    protected void OnTriggerExit2D(Collider2D other)
     {
         if (other.gameObject.tag == "Player") {
     	    playerPresent = false;
@@ -70,12 +54,18 @@ public class TaskBehaviour : MonoBehaviour
         uiVisible = true;
     }
     
-    private void hideUI() {
+    protected void hideUI() {
         foreach (Transform child in canvas.transform) {
             child.gameObject.SetActive(false);
         }
         uiVisible = false;
-        spacePressCount = 0;
-        spaceCountText.text = spacePressCount + " / " + spacePressCountTarget;
+    }
+    
+    public bool isComplete() {
+        return complete;
+    }
+    
+    public void setComplete() {
+        complete = true;
     }
 }
