@@ -44,12 +44,17 @@ public class PlayerPositionMessage {
 
 
 [Serializable]
-public class TaskMessage {
-    public string messageType = "TASK_UPDATE";
+public class TaskCompleteMessag {
+    public string messageType = "TASK_COMPLETE";
     public string gameId;
     public string playerId;
     public string taskId;
-    public string taskStatus;
+
+    public TaskCompleteMessag(string taskId) {
+        gameId = GameStateManager.Instance.CurrentGameID;
+        playerId = GameStateManager.Instance.CurrentPlayerId;
+        this.taskId = taskId;
+    }
 }
 
 
