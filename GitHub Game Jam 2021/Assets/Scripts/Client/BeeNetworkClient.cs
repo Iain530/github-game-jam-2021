@@ -12,14 +12,14 @@ public class BeeNetworkClient : MonoBehaviour {
     public static BeeNetworkClient Instance { get { return _instance; } }
 
     WebSocket websocket;
-    int websocketPort = 8999;
+    int port = 8999;
     string serverHostname = "192.168.0.48";
-    string joinPath = "/join";
-    string createPath = "/create";
+    string joinPath = "/joinGame";
+    string createPath = "/createGame";
 
 
     string BuildWebsocketURL() {
-        return "ws://" + serverHostname + ":" + websocketPort;
+        return "ws://" + serverHostname + ":" + port;
     }
 
 
@@ -34,7 +34,6 @@ public class BeeNetworkClient : MonoBehaviour {
     }
 
     private void Start() {
-        ConnectToWebSocket("", "");
     }
 
     public void JoinGame(string gameCode) {
@@ -47,9 +46,11 @@ public class BeeNetworkClient : MonoBehaviour {
 
 
     string BuildJoinURL(string gameCode) {
-        return serverHostname + joinPath + "/" + gameCode;
+        return "http://" + serverHostname + ":" + port + joinPath + "?gameCode=" + gameCode;
     }
-    string BuildCreateUrl() { return serverHostname + createPath; }
+    string BuildCreateUrl() {
+        return "http://" + serverHostname + ":" + port + createPath;
+    }
 
 
     IEnumerator MakeJoinGameRequest(string gameCode) {
@@ -95,9 +96,6 @@ public class BeeNetworkClient : MonoBehaviour {
         };
 
         websocket.OnMessage += (bytes) => {
-            Debug.Log("OnMessage!");
-            Debug.Log(bytes);
-
             // getting the message as a string
             var message = Encoding.UTF8.GetString(bytes);
             Debug.Log("OnMessage! " + message);
@@ -112,7 +110,9 @@ public class BeeNetworkClient : MonoBehaviour {
 
     void Update() {
     #if !UNITY_WEBGL || UNITY_EDITOR
-        websocket.DispatchMessageQueue();
+        if (websocket != null) {
+            websocket.DispatchMessageQueue();
+        }
     #endif
     }
 
