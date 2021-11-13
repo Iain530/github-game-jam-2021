@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 using NativeWebSocket;
+using System.Linq;
 
 
 public class BeeNetworkClient : MonoBehaviour {
@@ -50,7 +51,7 @@ public class BeeNetworkClient : MonoBehaviour {
             var message = Encoding.UTF8.GetString(bytes);
             Debug.Log("OnMessage! " + message);
 
-            // Update the game state
+            // Update the game state from the server
             GameStateManager.Instance.UpdateStateFromJson(message);    
         };
 
@@ -74,7 +75,14 @@ public class BeeNetworkClient : MonoBehaviour {
     }
 
     public void SendAiBeePositions(List<GameObject> bees) {
+        AiBeesPositionMessage message = new AiBeesPositionMessage();
+        message.beePositions = bees.Select(bee => {
+            // TODO: get ai bee ids
+            int id = 0;
+            return new BeePosition(id, bee.transform.position);
+        }).ToList();
 
+        SendJsonMessage(message);
     }
 
     async void SendJsonMessage(object serializableObj) {
