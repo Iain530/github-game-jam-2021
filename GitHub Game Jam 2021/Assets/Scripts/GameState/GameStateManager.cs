@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameStateManager : MonoBehaviour {
 
@@ -56,8 +57,13 @@ public class GameStateManager : MonoBehaviour {
             _secretToken = message.secretToken;
         }
 
-        if (message.success) {
+        if (message.success || message.messageType == "GAME_STATE_UPDATE") {
             GameState newState = message.gameState;
+
+            if (newState.gameStarted && !_state.gameStarted) {
+                SceneManager.LoadScene("Main");
+            }
+
             if (newState.messageTime >= _state.messageTime) {
                 Debug.Log("Updated game state");
                 _state = newState;

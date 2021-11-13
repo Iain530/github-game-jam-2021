@@ -9,6 +9,7 @@ public class GameStateUpdate {
     public GameState gameState;
     public bool success;
     public string secretToken;
+    public string messageType;
 }
 
 
