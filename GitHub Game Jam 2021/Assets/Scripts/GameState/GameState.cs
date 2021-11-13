@@ -9,9 +9,15 @@ public class GameState {
     public string gameId;
     public int messageTime;
     public bool gameStarted;
-    public List<Bee> bees = new List<Bee>();
+    public Dictionary<string, Bee> bees = new Dictionary<string, Bee>();
     public List<Task> tasks = new List<Task>();
     public List<Player> players = new List<Player>();
+
+    public Vector2? GetBeePosition(string id) {
+        Bee bee;
+        bees.TryGetValue(id, out bee);
+        return bee?.position;
+    }
 }
 
 
@@ -20,7 +26,6 @@ public class Bee {
     public string id;
     public string name;
     public Vector2 position;
-    public bool isPlayer;
 }
 
 
@@ -34,7 +39,7 @@ public class Task {
 [Serializable]
 public class Player {
     public string id;
-    public string beeId;
-    public string currentTaskId;
+    public Bee bee;
+    public int currentTaskIndex;
     public bool isQueenBee;
 }

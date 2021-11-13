@@ -19,6 +19,9 @@ public class GameStateManager : MonoBehaviour {
     public string CurrentGameCode { get { return _currentGameCode; } }
     public bool IsRoomOwner { get { return _isRoomOwner; } }
 
+    public delegate void Notify();
+    public event Notify GameStateUpdated;
+
     private void Awake() {
         if (_instance != null && _instance != this) {
             // Destroy if already an instance
@@ -49,13 +52,14 @@ public class GameStateManager : MonoBehaviour {
         GameState newState = JsonUtility.FromJson<GameState>(jsonState);
         if (newState.messageTime >= _state.messageTime) {
             _state = newState;
+            GameStateUpdated?.Invoke();  // broadcast event
         } else {
             Debug.LogWarning("Received old state from server, discarding");
         }
     }
     void LoadDefaultState() {
         _state = new GameState();
-        _state.bees.Add(new Bee());
+        _state.bees.Add("1", new Bee());
     }
 
     IEnumerator LogGameStateEvery10Seconds() {

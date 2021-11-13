@@ -2,17 +2,30 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NewBehaviourScript : MonoBehaviour
-{
-    // Start is called before the first frame update
-    void Start()
-    {
-        
+public class BeeState : MonoBehaviour {
+
+    private string _id;
+    public string Id { get { return _id; } }
+
+    GameStateManager stateManager;
+
+    void Start() {
+        stateManager = GameStateManager.Instance;
+        stateManager.GameStateUpdated += UpdatePosition;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+    public void UpdatePosition() {
+        Vector2? position = stateManager.state.GetBeePosition(Id);
+        if (position.HasValue) {
+            gameObject.transform.position = position.Value;
+        }
+    }
+
+    public Vector2 GetPosition() {
+        return gameObject.transform.position;
+    }
+
+    void OnDestroy() {
+        stateManager.GameStateUpdated -= UpdatePosition;    
     }
 }

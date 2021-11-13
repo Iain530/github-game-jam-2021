@@ -120,15 +120,10 @@ public class BeeNetworkClient : MonoBehaviour {
         SendJsonMessage(message);
     }
 
-    public void SendAiBeePositions(List<GameObject> bees) {
+    public void SendAiBeePositions(List<BeeState> bees) {
         var message = new AiBeesPositionMessage(
-            bees.Select(bee => {
-                // TODO: get ai bee ids
-                string id = "";
-                return new BeePosition(id, bee.transform.position);
-            }).ToList()
+            bees.Select(bee => new BeePosition(bee.Id, bee.GetPosition())).ToList()
         );
-
         SendJsonMessage(message);
     }
 

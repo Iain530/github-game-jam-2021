@@ -60,5 +60,5 @@ public class BeePosition {
 public class ServerConnectResponse {
     public string gameId;
     public string gameCode;
-    public int playerId;
+    public string playerId;
 }
