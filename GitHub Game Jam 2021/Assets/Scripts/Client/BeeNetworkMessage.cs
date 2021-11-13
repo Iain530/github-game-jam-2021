@@ -52,7 +52,7 @@ public class TaskCompleteMessage {
 
     public TaskCompleteMessage(string taskId) {
         gameId = GameStateManager.Instance.CurrentGameID;
-        playerId = GameStateManager.Instance.CurrentPlayerId;
+        secretToken = GameStateManager.Instance.SecretToken;
         this.taskId = taskId;
     }
 }
