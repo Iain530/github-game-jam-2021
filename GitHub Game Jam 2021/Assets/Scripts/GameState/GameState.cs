@@ -7,6 +7,7 @@ using UnityEngine;
 [Serializable]
 public class GameState {
     public string gameId;
+    public string gameCode;
     public int messageTime;
     public bool gameStarted;
     public Dictionary<string, Bee> bees = new Dictionary<string, Bee>();

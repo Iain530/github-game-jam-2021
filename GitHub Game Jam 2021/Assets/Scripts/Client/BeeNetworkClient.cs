@@ -34,7 +34,7 @@ public class BeeNetworkClient : MonoBehaviour {
     }
 
     private void Start() {
-        ConnectToWebSocket();
+        ConnectToWebSocket("", "");
     }
 
     public void JoinGame(string gameCode) {
@@ -59,7 +59,7 @@ public class BeeNetworkClient : MonoBehaviour {
         if (www.result == UnityWebRequest.Result.Success) {
             ServerConnectResponse resp = JsonUtility.FromJson<ServerConnectResponse>(www.downloadHandler.text);
             GameStateManager.Instance.JoinGame(resp.gameId, resp.playerId, resp.gameCode, false);
-            ConnectToWebSocket();
+            ConnectToWebSocket(resp.gameId, resp.playerId);
         } else {
             Debug.LogError(www.error);
         }
@@ -72,17 +72,18 @@ public class BeeNetworkClient : MonoBehaviour {
         if (www.result == UnityWebRequest.Result.Success) {
             ServerConnectResponse resp = JsonUtility.FromJson<ServerConnectResponse>(www.downloadHandler.text);
             GameStateManager.Instance.JoinGame(resp.gameId, resp.playerId, resp.gameCode, true);
-            ConnectToWebSocket();
+            ConnectToWebSocket(resp.gameId, resp.playerId);
         } else {
             Debug.LogError(www.error);
         }
     }
 
-    async void ConnectToWebSocket() {
+    async void ConnectToWebSocket(string gameId, string playerId) {
         websocket = new WebSocket(BuildWebsocketURL());
 
         websocket.OnOpen += () => {
             Debug.Log("Connection open!");
+            SendJsonMessage(new JoinLobbyMessage(gameId, playerId));
         };
 
         websocket.OnError += (e) => {

@@ -3,6 +3,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[Serializable]
+public class JoinLobbyMessage {
+    public string messageType = "JOIN_GAME_LOBBY";
+    public string gameId;
+    public string playerId;
+
+    public JoinLobbyMessage(string gameId, string playerId) {
+        this.gameId = gameId;
+        this.playerId = playerId;
+    }
+}
+
 
 [Serializable]
 public class PlayerPositionMessage {
