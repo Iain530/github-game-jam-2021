@@ -9,25 +9,42 @@ public class BeeState : MonoBehaviour {
 
     private string _hatName;
     public string HatName { get { return _hatName; } }
+    private bool _isOtherPlayer;
+    public bool IsOtherPlayer { get { return _isOtherPlayer; } }
+    private bool _isCurrentPlayer;
+    public bool IsCurrentPlayer { get { return _isCurrentPlayer; } }
+
+    private bool updatePositionFromServer;
 
     GameStateManager stateManager;
 
     void Start() {
         stateManager = GameStateManager.Instance;
-        if (!stateManager.IsRoomOwner) {
-            stateManager.GameStateUpdated += UpdatePosition;
+        stateManager.GameStateUpdated += UpdatePosition;
+    }
+
+    public void Initialize(Bee bee) {
+        _isCurrentPlayer = stateManager.IsCurrentPlayer(bee.id);
+        _isOtherPlayer = bee.isPlayer && !_isCurrentPlayer;
+
+        _id = bee.id;
+        _hatName = bee.hatName;
+
+        if (IsCurrentPlayer) {
+            updatePositionFromServer = false;
+        } else if (IsOtherPlayer) {
+            updatePositionFromServer = true;
+        } else {
+            updatePositionFromServer = !GameStateManager.Instance.IsRoomOwner;
         }
     }
 
-    public void Initialize(string id, string hatName) {
-        _id = id;
-        _hatName = hatName;
-    }
-
     public void UpdatePosition() {
-        Vector2? position = stateManager.state.GetBeePosition(Id);
-        if (position.HasValue) {
-            gameObject.transform.position = position.Value;
+        if (updatePositionFromServer) {
+            Vector2? position = stateManager.state.GetBeePosition(Id);
+            if (position.HasValue) {
+                gameObject.transform.position = position.Value;
+            }
         }
     }
 

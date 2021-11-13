@@ -36,6 +36,7 @@ public class Bee {
     public string id;
     public string hatName;
     public string name;
+    public bool isPlayer;
     public Vector2 position;
 }
 

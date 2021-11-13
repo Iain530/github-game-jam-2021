@@ -45,6 +45,14 @@ public class GameStateManager : MonoBehaviour {
         _isRoomOwner = isRoomOwner;
     }
 
+    public Player GetCurrentPlayer() {
+        return state.players.Find(player => player.id == CurrentPlayerId);
+    } 
+
+    public bool IsCurrentPlayer(string beeId) {
+        Player currentPlayer = GetCurrentPlayer();
+        return currentPlayer.bee.id == beeId;
+    }
 
     public string GetStateAsJson() {
         return JsonUtility.ToJson(state);
