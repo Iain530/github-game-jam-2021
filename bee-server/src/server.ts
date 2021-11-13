@@ -1,6 +1,7 @@
-import * as express from 'express';
+import express from 'express';
 import * as http from 'http';
-import * as WebSocket from 'ws';
+import WebSocket, { Server } from "ws";
+import { ClientsManager } from './model/clients';
 import { GameState, GameStateManager, Player } from './model/gameState';
 
 const app = express();
@@ -34,18 +35,23 @@ app.get('/joinGame', (req, res) => {
 const server = http.createServer(app);
 
 //initialize the WebSocket server instance
-const wss = new WebSocket.Server({ server });
+const wss = new Server({ server });
 
-wss.on('connection', (ws: WebSocket) => {
-	//connection is up, let's add a simple simple event
+wss.on('connection', (ws: any) => { // This ws should have type WebSocket
 	ws.on('message', (message: string) => {
-		//log the received message and send it back to the client
-		console.log('received: %s', message);
-		ws.send(`Hello, you sent -> ${message}`);
-	});
+		const data = JSON.parse(message)
 
-	//send immediatly a feedback to the incoming connection    
-	ws.send('Hi there, I am a WebSocket server');
+		switch (data.messageType) {
+			case 'JOIN_GAME_LOBBY':
+				ClientsManager.instance.addClient(data.playerId, ws)
+				ws.send(JSON.stringify({
+					gameState: GameStateManager.instance.getGameState(data.gameId)
+				}))
+				break
+			default:
+				throw new Error(`Unknown message type: ${data.messageType}`)
+		}
+	});
 });
 
 //start our server
