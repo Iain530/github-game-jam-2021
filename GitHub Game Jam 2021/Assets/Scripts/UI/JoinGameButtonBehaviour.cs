@@ -21,4 +21,9 @@ public class JoinGameButtonBehaviour : MonoBehaviour {
         validationMessage.text = JOINING;
         BeeNetworkClient.Instance.JoinGame(gameCode);
     }
+
+    public void LoadJoinGameScene()
+    { 
+        Application.LoadLevel(2);
+    }
 }
