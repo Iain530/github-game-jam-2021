@@ -39,4 +39,7 @@ public class TaskState : MonoBehaviour {
         return gameObject.transform.position;
     }
 
+    private void OnDestroy() {
+        stateManager.GameStateUpdated -= OnGameStateUpdated;
+    }
 }
