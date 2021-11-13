@@ -13,6 +13,7 @@ public class BeeSpawner : MonoBehaviour {
     void Start() {
         stateManager = GameStateManager.Instance;
         stateManager.GameStateUpdated += OnGameStateUpdate;
+        OnGameStateUpdate();
     }
 
     public void OnGameStateUpdate() {
@@ -27,7 +28,9 @@ public class BeeSpawner : MonoBehaviour {
                     // spawn other bee
                     instance = Instantiate(otherBeePrefab, transform);
                 }
-                instance.GetComponent<BeeState>().Initialize(bee);
+                BeeState beeState = instance.GetComponent<BeeState>();
+                beeState.Initialize(bee);
+                bees.Add(bee.id, beeState);
             }
         }        
     }
