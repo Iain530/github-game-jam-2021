@@ -25,10 +25,11 @@ public class GameState {
     public List<Player> players = new List<Player>();
 
     public Vector2? GetBeePosition(string id) {
-        Bee bee = players.Find(player => player.bee.id == id).bee;
-        if (bee == null) {
-            bee = aiBees.Find(aiBee => aiBee.id == id);
+        Player player = players.Find(player => player.bee.id == id);
+        if (player != null) {
+            return player.bee.position;
         }
+        Bee bee = aiBees.Find(aiBee => aiBee.id == id);    
         return bee.position;
     }
 
