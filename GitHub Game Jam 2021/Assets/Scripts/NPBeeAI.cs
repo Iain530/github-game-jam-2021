@@ -6,7 +6,7 @@ using UnityEngine;
 public class NPBeeAI : MonoBehaviour
 {
     public Transform target;
-    public float speed = 200f;
+    public float speed = 1f;
     // How close to waypoint before moving to next one
     public float nextWayPointDistance = 3f;
     public Transform npbGFX;
@@ -64,8 +64,9 @@ public class NPBeeAI : MonoBehaviour
         Vector2 direction = ((Vector2) path.vectorPath[currentWaypoint] - rb.position).normalized;
         Vector2 force = direction * speed * Time.deltaTime;
         
-        rb.AddForce(force);
-
+        // rb.AddForce(force);
+        rb.velocity= direction * speed;
+        
         float distance = Vector2.Distance(rb.position, path.vectorPath[currentWaypoint]);
 
         if (distance < nextWayPointDistance)
@@ -84,4 +85,5 @@ public class NPBeeAI : MonoBehaviour
             npbGFX.localScale = new Vector3(1f, 1f, 1f);
         }
     }
+    
 }

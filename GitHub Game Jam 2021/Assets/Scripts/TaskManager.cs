@@ -12,11 +12,15 @@ public class TaskManager : MonoBehaviour
     private List<Transform> tasks = new List<Transform>();
     private Transform targetTransform;
     private bool timerStarted;
+    private NPBeeAI ai;
+    private float aiAssignedSpeed;
 
     // Start is called before the first frame update
     void Start()
     {
         bool timerStarted = false;
+        ai = GetComponent<NPBeeAI>();
+        aiAssignedSpeed = ai.speed;
         InitialisePositions();
         ChooseNextTarget();
     }
@@ -39,7 +43,9 @@ public class TaskManager : MonoBehaviour
         }
         targetTransform = perspectiveTargetPos;
         Debug.Log("New target: " + targetTransform.position);
-        GetComponent<NPBeeAI>().target = targetTransform;
+        ai.target = targetTransform;
+        // Reassign speed to chosen speed
+        ai.speed = aiAssignedSpeed;
     }
 
     private IEnumerator Countdown()
@@ -48,6 +54,8 @@ public class TaskManager : MonoBehaviour
         float endDuration = 0f;
         timerStarted =  true;
         Debug.Log("Start task!");
+        // AI bee stop moving whilst does task
+        ai.speed = 0;
         while (endDuration < duration)
         {
             duration -= Time.deltaTime;
