@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameStateManager : MonoBehaviour {
 
@@ -44,6 +45,14 @@ public class GameStateManager : MonoBehaviour {
         _isRoomOwner = isRoomOwner;
     }
 
+    public Player GetCurrentPlayer() {
+        return state.players.Find(player => player.id == CurrentPlayerId);
+    } 
+
+    public bool IsCurrentPlayer(string beeId) {
+        Player currentPlayer = GetCurrentPlayer();
+        return currentPlayer.bee.id == beeId;
+    }
 
     public string GetStateAsJson() {
         return JsonUtility.ToJson(state);
@@ -56,8 +65,13 @@ public class GameStateManager : MonoBehaviour {
             _secretToken = message.secretToken;
         }
 
-        if (message.success) {
+        if (message.success || message.messageType == "GAME_STATE_UPDATE") {
             GameState newState = message.gameState;
+
+            if (newState.gameStarted && !_state.gameStarted) {
+                SceneManager.LoadScene("Main");
+            }
+
             if (newState.messageTime >= _state.messageTime) {
                 Debug.Log("Updated game state");
                 _state = newState;

@@ -33,5 +33,6 @@ public class PlayerMovement : MonoBehaviour
         {
             _renderer.flipX = true;
         }
+        BeeNetworkClient.Instance.SendCurrentPosition(transform.position);
     }
 }

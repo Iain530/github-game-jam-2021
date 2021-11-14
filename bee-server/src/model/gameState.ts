@@ -79,18 +79,22 @@ export class GameStateManager {
 
 	public registerPlayerToGame(player: Player, code: string): GameState {
 		const gameState = this.getGameStateWithCode(code)
+		if(gameState.gameStarted) {
+			console.error('Game already started ' + code)
+			return null
+		}
 		gameState.players.push(player)
-		gameState.bees.set(player.bee.id, player.bee)
 
 		gameState.broadcastToPlayers()
 		this.printGameStates()
 		return gameState
 	}
 
-	public updateBeePosition(gameId: string, beeId: string, pos: [number, number]): void {
+	public updateAIBeePosition(gameId: string, beeId: string, pos: [number, number]): void {
 		const gameState = this.getGameState(gameId)
-		const bee = gameState.bees.get(beeId)
+		const bee = gameState.aiBees.find(bee => bee.id === beeId)
 		bee.position = pos
+		gameState.broadcastToPlayers()
 	}
 
 	public broadcastGameUpdates(gameId: string): void {
@@ -109,13 +113,12 @@ export class GameState {
 	messageTime: number = Math.round((new Date()).getTime() / 1000)
 	gameCode: string = makeFourLetterID()
 	gameStarted: boolean = false
-	bees: Map<string, Bee> = new Map()
+	aiBees: Bee[] = []
 	tasks: Task[] = []
 	players: Player[]
 
 	constructor(hostPlayer: Player) {
 		this.players = [hostPlayer]
-		this.bees.set(hostPlayer.id, hostPlayer.bee)
 	}
 
 	broadcastToPlayers() {
