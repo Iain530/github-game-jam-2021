@@ -30,6 +30,13 @@ export class ClientsManager {
 		return newClient
 	}
 
+	public removeClient(clientId: string): void {
+		const client = this.getClient(clientId)
+		client.socket.close()
+		this.clients.delete(clientId)
+		this.printClients()
+	}
+
 	public getClient(clientId: string): Client {
 		if (this.clients.has(clientId)) {
 			return this.clients.get(clientId)

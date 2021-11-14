@@ -41,7 +41,7 @@
 			{#each game.aiBees as aiBee}
 				<p>ID: {aiBee.id}</p>
 				<p>Name: {aiBee.name}</p>
-			{:else}
+				<p>Position: {aiBee.position[0]}, {aiBee.position[1]}</p>
 			{/each}
 			<hr />
 		{:else}

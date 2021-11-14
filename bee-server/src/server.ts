@@ -3,7 +3,7 @@ import * as http from 'http';
 import WebSocket, { Server } from "ws";
 import { ClientsManager } from './model/clients';
 import { GameState, GameStateManager, Player } from './model/gameState';
-import { aiPositionUpdateHandler, joinGameHandler, playerPositionUpdateHandler, startGameHandler, taskCompleteHandler } from './model/socketMessageHandlers';
+import { aiPositionUpdateHandler, assignTaskHandler, beeHatUpdateHandler, beeNameUpdateHandler, joinGameHandler, leaveLobbyHandler, playerPositionUpdateHandler, startGameHandler, taskCompleteHandler } from './model/socketMessageHandlers';
 
 const app = express();
 
@@ -77,6 +77,18 @@ wss.on('connection', (ws: any) => { // This ws should have type WebSocket
 				break
 			case 'AI_POSITION_UPDATE':
 				aiPositionUpdateHandler(ws, data)
+				break
+			case 'BEE_NAME_UPDATE':
+				beeNameUpdateHandler(ws, data)
+				break
+			case 'BEE_HAT_UPDATE':
+				beeHatUpdateHandler(ws, data)
+				break
+			case 'LEAVE_LOBBY':
+				leaveLobbyHandler(ws, data)
+				break
+			case 'ASSIGN_TASK':
+				assignTaskHandler(ws, data)
 				break
 			default:
 				console.error(`Unknown message type: ${data.messageType}`)

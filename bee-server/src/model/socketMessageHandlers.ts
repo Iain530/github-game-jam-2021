@@ -72,3 +72,48 @@ export const aiPositionUpdateHandler = (ws: WebSocket, data: any) => {
 		}
 	}
 }
+
+export const beeNameUpdateHandler = (ws: WebSocket, data: any) => {
+	const client = ClientsManager.instance.getClient(data.secretToken)
+	const success = GameStateManager.instance.updateBeeName(data.gameId, client.playerId, data.name, data.isPlayerBee)
+	ws.send(JSON.stringify({
+		messageType: "BEE_NAME_UPDATE_RESPONSE",
+		success,
+	}))
+}
+
+export const beeHatUpdateHandler = (ws: WebSocket, data: any) => {
+	const client = ClientsManager.instance.getClient(data.secretToken)
+	const success = GameStateManager.instance.updateBeeHat(data.gameId, client.playerId, data.hat, data.isPlayerBee)
+	ws.send(JSON.stringify({
+		messageType: "BEE_HAT_UPDATE_RESPONSE",
+		success,
+	}))
+}
+
+export const leaveLobbyHandler = (ws: WebSocket, data: any) => {
+	const client = ClientsManager.instance.getClient(data.secretToken)
+	const game = GameStateManager.instance.getGameState(data.gameId)
+	if (client && game) {
+		ClientsManager.instance.removeClient(client.playerId)
+		GameStateManager.instance.unregisterPlayerFromGame(data.gameId, client.playerId)
+		ws.send(JSON.stringify({
+			messageType: "LEAVE_LOBBY_RESPONSE",
+			success: true,
+		}))
+	} else {
+		ws.send(JSON.stringify({
+			messageType: "LEAVE_LOBBY_RESPONSE",
+			success: false,
+		}))
+	}
+}
+
+export const assignTaskHandler = (ws: WebSocket, data: any) => {
+	const client = ClientsManager.instance.getClient(data.secretToken)
+	const success = GameStateManager.instance.assignTaskToPlayer(data.gameId, client.playerId, data.taskId)
+	ws.send(JSON.stringify({
+		messageType: "ASSIGN_TASK_RESPONSE",
+		success,
+	}))
+}

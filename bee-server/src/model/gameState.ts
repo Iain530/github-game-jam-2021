@@ -106,6 +106,49 @@ export class GameStateManager {
 		this.printGameStates()
 		this.gameStates.delete(id)
 	}
+
+	public updateBeeName(gameId: string, beeId: string, name: string, isPlayerBee: boolean): boolean {
+		const gameState = this.getGameState(gameId)
+		if(isPlayerBee) {
+			const player = gameState.players.find(player => player.bee.id === beeId)
+			player.bee.name = name
+		} else {
+			const bee = gameState.aiBees.find(bee => bee.id === beeId)
+			bee.name = name
+		}
+
+		gameState.broadcastToPlayers()
+		return true
+	}
+
+	public updateBeeHat(gameId: string, beeId: string, hat: string, isPlayerBee: boolean): boolean {
+		const gameState = this.getGameState(gameId)
+		if(isPlayerBee) {
+			const player = gameState.players.find(player => player.bee.id === beeId)
+			player.bee.hatName = hat
+		} else {
+			const bee = gameState.aiBees.find(bee => bee.id === beeId)
+			bee.hatName = hat
+		}
+
+		gameState.broadcastToPlayers()
+		return true
+	}
+
+	public unregisterPlayerFromGame(gameId: string, playerId: string): void {
+		const gameState = this.getGameState(gameId)
+		const player = gameState.players.find(player => player.id === playerId)
+		gameState.players.splice(gameState.players.indexOf(player), 1)
+		gameState.broadcastToPlayers()
+	}
+
+	public assignTaskToPlayer(gameId: string, playerId: string, taskId: string): boolean {
+		const gameState = this.getGameState(gameId)
+		const player = gameState.players.find(player => player.id === playerId)
+		player.currentTaskIndex = gameState.tasks.findIndex(task => task.id === taskId)
+		gameState.broadcastToPlayers()
+		return true
+	}
 }
 
 export class GameState {
