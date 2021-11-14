@@ -9,6 +9,7 @@ public class GameStateUpdate {
     public GameState gameState;
     public bool success;
     public string secretToken;
+    public string messageType;
 }
 
 
@@ -18,14 +19,13 @@ public class GameState {
     public string gameCode;
     public int messageTime;
     public bool gameStarted;
-    public Dictionary<string, Bee> bees = new Dictionary<string, Bee>();
+    public List<Bee> bees = new List<Bee>();
     public List<Task> tasks = new List<Task>();
     public List<Player> players = new List<Player>();
 
     public Vector2? GetBeePosition(string id) {
-        Bee bee;
-        bees.TryGetValue(id, out bee);
-        return bee?.position;
+        Bee bee = players.Find(player => player.bee.id == id).bee;
+        return bee.position;
     }
 }
 
@@ -35,6 +35,7 @@ public class Bee {
     public string id;
     public string hatName;
     public string name;
+    public bool isPlayer;
     public Vector2 position;
 }
 

@@ -145,6 +145,9 @@ public class BeeNetworkClient : MonoBehaviour {
     }
 
     async void SendJsonMessage(object message) {
+        if (websocket == null)
+            return;
+
         if (websocket.State == WebSocketState.Open) {
             string json = JsonUtility.ToJson(message);
             byte[] messageBytes = Encoding.UTF8.GetBytes(json);

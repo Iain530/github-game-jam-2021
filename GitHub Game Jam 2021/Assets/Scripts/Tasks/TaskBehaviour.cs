@@ -17,7 +17,7 @@ public class TaskBehaviour : MonoBehaviour
     protected void Start()
     {
         taskState = GetComponent<TaskState>();
-        canvas = this.gameObject.transform.GetChild(0);
+        canvas = this.gameObject.transform.Find("Canvas");
         hideUI();
     }
 
