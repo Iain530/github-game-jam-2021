@@ -7,8 +7,6 @@ public class BeeState : MonoBehaviour {
     private string _id;
     public string Id { get { return _id; } }
 
-    private string _hatName;
-    public string HatName { get { return _hatName; } }
     private bool _isOtherPlayer;
     public bool IsOtherPlayer { get { return _isOtherPlayer; } }
     private bool _isCurrentPlayer;
@@ -18,9 +16,30 @@ public class BeeState : MonoBehaviour {
 
     GameStateManager stateManager;
 
+    Sprite[] beeSprites;
+
     void Start() {
         stateManager = GameStateManager.Instance;
         stateManager.GameStateUpdated += UpdatePosition;
+    }
+
+    Dictionary<string, int> hatIndexes = new Dictionary<string, int> {
+        {"Construction", 0},
+        {"Crown", 1},
+        {"Fedora", 2},
+        {"Popo", 3},
+        {"Santa", 4},
+        {"Suess", 5},
+        {"Sorting", 6},
+        {"Tophat", 7},
+        {"Newbie", 7},
+    };
+
+    Sprite GetSpriteForHatName(string hatName) {
+        beeSprites = Resources.LoadAll<Sprite>("BeeSprites");
+        int index;
+        hatIndexes.TryGetValue(hatName, out index);
+        return beeSprites[index];
     }
 
     public void Initialize(Bee bee) {
@@ -28,7 +47,6 @@ public class BeeState : MonoBehaviour {
         _isOtherPlayer = bee.isPlayer && !_isCurrentPlayer;
 
         _id = bee.id;
-        _hatName = bee.hatName;
 
         if (IsCurrentPlayer) {
             updatePositionFromServer = false;
@@ -36,6 +54,16 @@ public class BeeState : MonoBehaviour {
             updatePositionFromServer = true;
         } else {
             updatePositionFromServer = !GameStateManager.Instance.IsRoomOwner;
+        }
+
+        SpriteRenderer sr = GetComponent<SpriteRenderer>();
+        if (sr == null) {
+            sr = GetComponentInChildren<SpriteRenderer>();
+        }
+
+        sr.sprite = GetSpriteForHatName(bee.hatName);
+        if (bee.hatName == "Crown") {
+            transform.localScale *= 2;
         }
     }
 
