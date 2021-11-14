@@ -25,23 +25,29 @@
 		<h2>Games: {data.gameState.length}</h2>
 		{#each data.gameState as game}
 			<p>ID: {game.gameId} | Code: {game.gameCode} | Status: {game.gameStarted ? "Started" : "Not started"} </p>
-			<p>Players: {game.players.length}</p>
+			<p><b>Players</b>: {game.players.length}</p>
 			{#each game.players as player}
 				<p>ID: {player.id}</p>
 				<p>Bee {JSON.stringify(player.bee)}</p>
 			{:else}
 				<p>No players</p>
 			{/each}
-			<p>Tasks: {game.tasks.length}</p>
+			<p><b>Tasks</b>: {game.tasks.length}</p>
 			{#each game.tasks as task}
 				<p>ID: {task.id}</p>
 				<p>Completed: {task.completed}</p>
+			{/each}
+			<p><b>AI bees</b>: {game.aiBees.length}</p>
+			{#each game.aiBees as aiBee}
+				<p>ID: {aiBee.id}</p>
+				<p>Name: {aiBee.name}</p>
 			{:else}
 			{/each}
 			<hr />
 		{:else}
 			<p>No games</p>
 		{/each}
+		
 	{:catch error}
 		<p>An error occurred!</p>
 	{/await}
