@@ -49,7 +49,6 @@ public class BeeSpawner : MonoBehaviour {
                 Debug.Log("Attempting to spawn AI bees");
                 instance = Instantiate(aiBeePrefab, transform);
                 aiBees.Add(instance.GetComponent<BeeState>());
-                Debug.Break();
             } else {
                 instance = Instantiate(otherBeePrefab, transform);
             }

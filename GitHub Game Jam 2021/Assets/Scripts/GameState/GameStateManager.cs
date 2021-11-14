@@ -78,7 +78,7 @@ public class GameStateManager : MonoBehaviour {
                 GameStateUpdated?.Invoke();  // broadcast event
                 Debug.Log(state);
             } else {
-                Debug.LogWarning("Received old state from server, discarding");
+                Debug.LogWarning("Received old state from server, discarding " + jsonState);
             }
         } else {
             Debug.LogError("Recieved failure state from server: " + jsonState);

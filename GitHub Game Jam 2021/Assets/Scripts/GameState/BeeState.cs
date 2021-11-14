@@ -56,12 +56,15 @@ public class BeeState : MonoBehaviour {
             updatePositionFromServer = !GameStateManager.Instance.IsRoomOwner;
         }
 
-        SpriteRenderer sr = GetComponent<SpriteRenderer>();
-        if (sr == null) {
-            sr = GetComponentInChildren<SpriteRenderer>();
+
+        if (!(_isCurrentPlayer && bee.hatName == "Crown")) {
+            SpriteRenderer sr = GetComponent<SpriteRenderer>();
+            if (sr == null) {
+                sr = GetComponentInChildren<SpriteRenderer>();
+            }
+            sr.sprite = GetSpriteForHatName(bee.hatName);
         }
 
-        sr.sprite = GetSpriteForHatName(bee.hatName);
         if (bee.hatName == "Crown") {
             transform.localScale *= 2;
         }
