@@ -6,6 +6,7 @@ public class BeeSpawner : MonoBehaviour {
 
     public GameObject playerBeePrefab;
     public GameObject otherBeePrefab;
+    public GameObject aiBeePrefab;
 
     GameStateManager stateManager;
     Dictionary<string, BeeState> bees = new Dictionary<string, BeeState>();
@@ -19,8 +20,14 @@ public class BeeSpawner : MonoBehaviour {
     public void OnGameStateUpdate() {
         foreach (Player p in stateManager.state.players) {
             Bee bee = p.bee;
-            if (!bees.ContainsKey(bee.id)) {
-                GameObject instance;
+            SpawnBee(bee);
+        }
+    }
+
+    void SpawnBee(Bee bee) {
+        if (!bees.ContainsKey(bee.id)) {
+            GameObject instance;
+            if (bee.isPlayer) {
                 if (stateManager.IsCurrentPlayer(bee.id)) {
                     // Spawn player bee
                     instance = Instantiate(playerBeePrefab, transform);
@@ -28,13 +35,15 @@ public class BeeSpawner : MonoBehaviour {
                     // spawn other bee
                     instance = Instantiate(otherBeePrefab, transform);
                 }
-                Debug.Log(JsonUtility.ToJson(bee));
-                BeeState beeState = instance.GetComponent<BeeState>();
-                beeState.Initialize(bee);
-                bees.Add(bee.id, beeState);
-                Debug.Log(bees.Count);
+            } else if (stateManager.IsRoomOwner) {
+                instance = Instantiate(aiBeePrefab, transform);
+            } else {
+                instance = Instantiate(otherBeePrefab, transform);
             }
-        }        
+            BeeState beeState = instance.GetComponent<BeeState>();
+            beeState.Initialize(bee);
+            bees.Add(bee.id, beeState);
+        }
     }
 
     void OnDestroy() {
