@@ -25,7 +25,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9179803230742564275}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.5281616, y: -0.26440886, z: -8.995528}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -44,4 +44,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerBeePrefab: {fileID: 7423118858594430594, guid: 76073056757f24659a07d9e9a2fbf2ce, type: 3}
-  otherBeePrefab: {fileID: 728141447251171102, guid: 15fe6f927aa67a54190343b92bdd1d82, type: 3}
+  otherBeePrefab: {fileID: 915898408538992010, guid: 1d6361dffac9601479ed24e761dfee02, type: 3}
