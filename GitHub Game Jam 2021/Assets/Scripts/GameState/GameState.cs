@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -46,11 +47,15 @@ public class Task {
     public bool complete;
 }
 
-
 [Serializable]
 public class Player {
     public string id;
     public Bee bee;
-    public int currentTaskIndex;
+    public List<Task> tasks;
     public bool isQueenBee;
+
+    public Task GetCurrentTask() {
+        Task current = tasks.Find(task => !task.complete);
+        return current;  // null if tasks complete
+    }
 }

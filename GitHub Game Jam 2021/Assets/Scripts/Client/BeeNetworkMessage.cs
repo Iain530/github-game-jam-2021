@@ -20,10 +20,12 @@ public class BeginGameMessage {
     public string messageType = "START_GAME";
     public string gameId;
     public string secretToken;
-
+    public List<string> taskIds;
+ 
     public BeginGameMessage() {
         gameId = GameStateManager.Instance.CurrentGameID;
         secretToken = GameStateManager.Instance.SecretToken;
+        taskIds = TaskManager.Instance.AvailableTaskIds();
     }
 }
 
