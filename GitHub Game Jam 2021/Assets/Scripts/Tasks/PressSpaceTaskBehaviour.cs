@@ -14,7 +14,7 @@ public class PressSpaceTaskBehaviour : TaskBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        spaceCountText = GameObject.Find("Space Count").GetComponent<Text>();
+        spaceCountText = this.gameObject.transform.FindChild("Canvas").FindChild("Space Count").GetComponent<Text>();
         base.Start();
     }
 
