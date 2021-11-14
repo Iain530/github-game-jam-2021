@@ -23,6 +23,9 @@ public class BeeSpawner : MonoBehaviour {
             Bee bee = p.bee;
             SpawnBee(bee);
         }
+        foreach (Bee bee in stateManager.state.aiBees) {
+            SpawnBee(bee);
+        }
     }
 
     void SpawnBee(Bee bee) {
@@ -40,10 +43,13 @@ public class BeeSpawner : MonoBehaviour {
                     instance = Instantiate(otherBeePrefab, transform);
                 }
             } else if (stateManager.IsRoomOwner) {
+                Debug.Log("Attempting to spawn AI bees");
                 instance = Instantiate(aiBeePrefab, transform);
+                Debug.Break();
             } else {
                 instance = Instantiate(otherBeePrefab, transform);
             }
+            instance.transform.position = bee.position;
             BeeState beeState = instance.GetComponent<BeeState>();
             beeState.Initialize(bee);
             bees.Add(bee.id, beeState);

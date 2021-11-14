@@ -25,7 +25,7 @@ public class BeginGameMessage {
     public BeginGameMessage() {
         gameId = GameStateManager.Instance.CurrentGameID;
         secretToken = GameStateManager.Instance.SecretToken;
-        taskIds = TaskManager.Instance.AvailableTaskIds();
+        taskIds = BeeTaskManager.Instance.AvailableTaskIds();
     }
 }
 

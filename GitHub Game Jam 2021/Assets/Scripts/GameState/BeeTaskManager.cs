@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class TaskManager : MonoBehaviour {
-    private static TaskManager _instance;
-    public static TaskManager Instance { get { return _instance; } }
+public class BeeTaskManager : MonoBehaviour {
+    private static BeeTaskManager _instance;
+    public static BeeTaskManager Instance { get { return _instance; } }
 
     Dictionary<string, GameObject> _tasks = new Dictionary<string, GameObject>();
     public int taskCount;

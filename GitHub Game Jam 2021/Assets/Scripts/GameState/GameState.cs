@@ -20,12 +20,15 @@ public class GameState {
     public string gameCode;
     public int messageTime;
     public bool gameStarted;
-    public List<Bee> bees = new List<Bee>();
+    public List<Bee> aiBees = new List<Bee>();
     public List<Task> tasks = new List<Task>();
     public List<Player> players = new List<Player>();
 
     public Vector2? GetBeePosition(string id) {
         Bee bee = players.Find(player => player.bee.id == id).bee;
+        if (bee == null) {
+            bee = aiBees.Find(aiBee => aiBee.id == id);
+        }
         return bee.position;
     }
 
