@@ -137,6 +137,7 @@ public class BeeNetworkClient : MonoBehaviour {
 
     public void SendLeaveLobbyMessage() {
         var message = new LeaveLobbyMessage();
+        SendJsonMessage(message);
     }
 
     public void SendTaskComplete(string id) {
