@@ -8,7 +8,7 @@ public class JoinGameButtonBehaviour : MonoBehaviour {
     public InputField inputField;
     public Text validationMessage;
 
-    string BAD_CODE_FORMAT = "Please enter a 4 letter code";
+    string BAD_CODE_FORMAT = "Please enter a 4-character code";
     string JOINING = "Joining game lobby...";
 
     public void OnClickJoinGame() {
@@ -20,10 +20,5 @@ public class JoinGameButtonBehaviour : MonoBehaviour {
 
         validationMessage.text = JOINING;
         BeeNetworkClient.Instance.JoinGame(gameCode);
-    }
-
-    public void LoadJoinGameScene()
-    { 
-        Application.LoadLevel(2);
     }
 }
