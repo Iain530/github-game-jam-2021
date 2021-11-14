@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class BeeState : MonoBehaviour {
 
+    [SerializeField]
     private string _id;
     public string Id { get { return _id; } }
 
@@ -12,6 +13,7 @@ public class BeeState : MonoBehaviour {
     private bool _isCurrentPlayer;
     public bool IsCurrentPlayer { get { return _isCurrentPlayer; } }
 
+    [SerializeField]
     private bool updatePositionFromServer;
 
     GameStateManager stateManager;
@@ -73,9 +75,7 @@ public class BeeState : MonoBehaviour {
     public void UpdatePosition() {
         if (updatePositionFromServer) {
             Vector2? position = stateManager.state.GetBeePosition(Id);
-            if (position.HasValue) {
-                gameObject.transform.position = position.Value;
-            }
+            gameObject.transform.position = position.Value;
         }
     }
 

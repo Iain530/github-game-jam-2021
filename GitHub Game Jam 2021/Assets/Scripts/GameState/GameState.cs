@@ -24,7 +24,7 @@ public class GameState {
     public List<Task> tasks = new List<Task>();
     public List<Player> players = new List<Player>();
 
-    public Vector2? GetBeePosition(string id) {
+    public Vector2 GetBeePosition(string id) {
         Player player = players.Find(player => player.bee.id == id);
         if (player != null) {
             return player.bee.position;
