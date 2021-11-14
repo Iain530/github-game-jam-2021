@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BeeState : MonoBehaviour {
 
@@ -78,6 +79,13 @@ public class BeeState : MonoBehaviour {
 
     public Vector2 GetPosition() {
         return gameObject.transform.position;
+    }
+
+    public void PlayerDeath() {
+        GameObject deathScreenCanvas = this.gameObject.transform.Find("Victory-Defeat-Background").gameObject;
+        GameObject deathScreenMessage = deathScreenCanvas.transform.Find("Text").GetComponent<Text>().gameObject;
+        deathScreenMessage.GetComponent<Text>().text = "You've BEEn discovered";
+        deathScreenCanvas.SetActive(true);
     }
 
     void OnDestroy() {

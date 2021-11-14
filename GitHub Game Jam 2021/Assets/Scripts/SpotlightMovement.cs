@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
-public class SpotlightMovement : MonoBehaviour
+public class SpotlightMovement : MonoBehaviour, IPointerClickHandler
 {
     public Transform targetCamera;
     private Vector3 initalOffset;
@@ -18,6 +19,18 @@ public class SpotlightMovement : MonoBehaviour
         cameraPosition = targetCamera.position + initalOffset;
         transform.position = cameraPosition;
     }
+
+    public void OnMouseDown(PointerEventData eventData)
+    {
+        Debug.Log("Clicked");
+        GameObject clickTarget = eventData.pointerCurrentRaycast.gameObject;
+        Debug.Log(clickTarget.name);
+        if (clickTarget.tag == "Player") {
+            Debug.Log("Clicked on player");
+            clickTarget.GetComponent<BeeState>().PlayerDeath();
+        }
+    }
+
 
     void FixedUpdate()
     {
