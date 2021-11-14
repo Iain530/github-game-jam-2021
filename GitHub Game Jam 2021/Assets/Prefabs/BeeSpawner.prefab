@@ -43,5 +43,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6654d6550b811b4b94158f716845958, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerBeePrefab: {fileID: 7423118858594430594, guid: 76073056757f24659a07d9e9a2fbf2ce, type: 3}
+  playerBeePrefab: {fileID: 1319066095837732323, guid: e6981057ab1543d43bb76cb8b66d9296, type: 3}
   otherBeePrefab: {fileID: 915898408538992010, guid: 1d6361dffac9601479ed24e761dfee02, type: 3}
+  aiBeePrefab: {fileID: 4994888979241779886, guid: 700dd376c582d5945b3381ac4729eb5e, type: 3}
+  queenBeePrefab: {fileID: 4279987202105728404, guid: 7fb217707c89f9310b139c995475125a, type: 3}

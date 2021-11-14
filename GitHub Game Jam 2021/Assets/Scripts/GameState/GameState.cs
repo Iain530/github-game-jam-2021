@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -19,13 +20,27 @@ public class GameState {
     public string gameCode;
     public int messageTime;
     public bool gameStarted;
-    public List<Bee> bees = new List<Bee>();
+    public List<Bee> aiBees = new List<Bee>();
     public List<Task> tasks = new List<Task>();
     public List<Player> players = new List<Player>();
 
     public Vector2? GetBeePosition(string id) {
         Bee bee = players.Find(player => player.bee.id == id).bee;
+        if (bee == null) {
+            bee = aiBees.Find(aiBee => aiBee.id == id);
+        }
         return bee.position;
+    }
+
+    public Task GetTaskWithId(string id) {
+        foreach (Player p in players) {
+            foreach (Task t in p.tasks) {
+                if (t.id == id) {
+                    return t;
+                }
+            }
+        }
+        return null;
     }
 }
 
@@ -46,11 +61,15 @@ public class Task {
     public bool complete;
 }
 
-
 [Serializable]
 public class Player {
     public string id;
     public Bee bee;
-    public int currentTaskIndex;
+    public List<Task> tasks;
     public bool isQueenBee;
+
+    public Task GetCurrentTask() {
+        Task current = tasks.Find(task => !task.complete);
+        return current;  // null if tasks complete
+    }
 }
