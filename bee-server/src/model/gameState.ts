@@ -53,6 +53,9 @@ export class GameStateManager {
 	public startGame(gameId: any) {
 		const gameState = this.getGameState(gameId)
 		gameState.gameStarted = true
+		// assign random queen
+		const randomQueen = Math.floor(Math.random() * gameState.players.length)
+		gameState.players[randomQueen].isQueenBee = true
 		gameState.broadcastToPlayers()
 	}
 
