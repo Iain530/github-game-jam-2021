@@ -119,6 +119,13 @@ export class GameState {
 
 	constructor(hostPlayer: Player) {
 		this.players = [hostPlayer]
+
+		const aiBeeCount = getRandomInt(8)
+		for(let i = 0; i < aiBeeCount; i++) {
+			const bee = new Bee(false)
+			bee.name = 'AI Bee ' + (i + 1)
+			this.aiBees.push(bee)
+		}
 	}
 
 	broadcastToPlayers() {
@@ -164,4 +171,8 @@ function makeFourLetterID(): string {
     text += possible.charAt(Math.floor(Math.random() * possible.length))
 
   return text
+}
+
+function getRandomInt(max) {
+  return Math.floor(Math.random() * max);
 }
