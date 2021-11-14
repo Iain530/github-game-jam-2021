@@ -7,7 +7,7 @@ using Random = UnityEngine.Random;
 
 public class TaskManager : MonoBehaviour
 {
-    public GameObject taskPositionsParent;
+    string taskPositionsParentName = "TaskManager";
 
     private List<Transform> tasks = new List<Transform>();
     private Transform targetTransform;
@@ -27,7 +27,7 @@ public class TaskManager : MonoBehaviour
 
     void InitialisePositions()
     {
-        foreach (Transform child in taskPositionsParent.transform)
+        foreach (Transform child in GameObject.Find(taskPositionsParentName).transform)
         {
             tasks.Add(child);
         }

@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 4994888979241779873}
   - component: {fileID: 4994888979241779887}
   - component: {fileID: 4994888979241779876}
+  - component: {fileID: -3174741983852106892}
   m_Layer: 0
   m_Name: NPBee
   m_TagString: Untagged
@@ -129,7 +130,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3fbdd65e2cd13ac4a8aac421aa437952, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  taskPositionsParent: {fileID: 0}
+--- !u!114 &-3174741983852106892
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4994888979241779886}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00004e78cce16d743a36020cf0255a3f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4994888980006652990
 GameObject:
   m_ObjectHideFlags: 0
