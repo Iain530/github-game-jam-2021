@@ -10,7 +10,7 @@ public class SetPlayerCounter : MonoBehaviour {
 
     void Start() {
         // stateManager 
-        counter = GetComponent<Text>();
+        counter = GameObject.Find("PlayerCounter").GetComponent<Text>();
     }
 
     void Update() {

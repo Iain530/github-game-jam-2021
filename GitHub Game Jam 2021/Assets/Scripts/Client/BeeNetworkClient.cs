@@ -12,8 +12,6 @@ public class BeeNetworkClient : MonoBehaviour {
     private static BeeNetworkClient _instance;
     public static BeeNetworkClient Instance { get { return _instance; } }
 
-    public string lobbySceneName = "BeginGameMenu";
-
     WebSocket websocket;
     int port = 8999;
     string serverHostname = "192.168.0.48";
@@ -88,7 +86,6 @@ public class BeeNetworkClient : MonoBehaviour {
         websocket.OnOpen += () => {
             Debug.Log("Connection open!");
             SendJsonMessage(new JoinLobbyMessage(gameId, playerId));
-            SceneManager.LoadScene(lobbySceneName);
         };
 
         websocket.OnError += (e) => {
@@ -138,6 +135,10 @@ public class BeeNetworkClient : MonoBehaviour {
         SendJsonMessage(message);
     }
 
+    public void SendLeaveLobbyMessage() {
+        var message = new LeaveLobbyMessage();
+        SendJsonMessage(message);
+    }
 
     public void SendTaskComplete(string id) {
         var message = new TaskCompleteMessage(id);
@@ -158,6 +159,9 @@ public class BeeNetworkClient : MonoBehaviour {
     }
 
     private async void OnApplicationQuit() {
-        await websocket.Close();
+        if (websocket != null) {
+            SendLeaveLobbyMessage();
+            await websocket.Close();
+        }
     }
 }

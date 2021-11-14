@@ -54,6 +54,16 @@ public class GameStateManager : MonoBehaviour {
         return currentPlayer.bee.id == beeId;
     }
 
+    public void DecideLobbyView() {
+        if(_isRoomOwner) {
+            GameObject.Find("BeginButton").SetActive(true);
+            GameObject.Find("WaitingHostText").SetActive(false);
+        } else {
+            GameObject.Find("BeginButton").SetActive(false);
+            GameObject.Find("WaitingHostText").SetActive(true);
+        }
+    }
+
     public string GetStateAsJson() {
         return JsonUtility.ToJson(state);
     }
