@@ -1,18 +1,69 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
+
 
 public class TaskManager : MonoBehaviour
 {
+    public GameObject taskPositionsParent;
+
+    private List<Transform> tasks = new List<Transform>();
+    private Transform targetTransform;
+    private bool timerStarted;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        bool timerStarted = false;
+        InitialisePositions();
+        ChooseNextTarget();
     }
 
-    // Update is called once per frame
-    void Update()
+    void InitialisePositions()
     {
-        
+        foreach (Transform child in taskPositionsParent.transform)
+        {
+            tasks.Add(child);
+        }
+    }
+
+    void ChooseNextTarget()
+    {
+        Debug.Log("Task.count: "+tasks.Count);
+        Transform perspectiveTargetPos = tasks[Random.Range(0, tasks.Count)];
+        while (targetTransform == perspectiveTargetPos)
+        {
+            perspectiveTargetPos = tasks[Random.Range(0, tasks.Count)];
+        }
+        targetTransform = perspectiveTargetPos;
+        Debug.Log("New target: " + targetTransform.position);
+        GetComponent<NPBeeAI>().target = targetTransform;
+    }
+
+    private IEnumerator Countdown()
+    {
+        float duration = Random.Range(5f, 11f); // Random time between 5-10s for a task
+        float endDuration = 0f;
+        timerStarted =  true;
+        Debug.Log("Start task!");
+        while (endDuration < duration)
+        {
+            duration -= Time.deltaTime;
+            yield return null; 
+        }
+        Debug.Log("Finished task!");
+        timerStarted = false;
+        ChooseNextTarget();
+    }
+    
+    void FixedUpdate()
+    {
+        Vector3 NPBeePosition = GetComponent<Transform>().position;
+        if (Vector2.Distance(NPBeePosition, targetTransform.position) < 0.05f && !timerStarted)
+        {
+            StartCoroutine(Countdown());
+        }
     }
 }

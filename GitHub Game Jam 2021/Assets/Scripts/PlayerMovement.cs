@@ -21,7 +21,7 @@ public class PlayerMovement : MonoBehaviour
 
     void FixedUpdate()
     {
-        BeeNetworkClient.Instance.SendCurrentPosition(gameObject.transform.position);
+        // BeeNetworkClient.Instance.SendCurrentPosition(gameObject.transform.position);
         float inputX = Input.GetAxisRaw("Horizontal");
         float inputY = Input.GetAxisRaw("Vertical");
         _rigidBody.velocity = new Vector2(inputX * speed, inputY * speed);
