@@ -142,6 +142,14 @@ export class GameStateManager {
 		gameState.broadcastToPlayers()
 	}
 
+	public kickPlayerFromGame(gameId: string, playerId: string): boolean {
+		const gameState = this.getGameState(gameId)
+		const player = gameState.players.find(player => player.id === playerId)
+		gameState.players.splice(gameState.players.indexOf(player), 1)
+		gameState.broadcastToPlayers()
+		return true
+	}
+
 	public assignTaskToPlayer(gameId: string, playerId: string, taskId: string): boolean {
 		const gameState = this.getGameState(gameId)
 		const player = gameState.players.find(player => player.id === playerId)

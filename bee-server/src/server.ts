@@ -3,7 +3,7 @@ import * as http from 'http';
 import WebSocket, { Server } from "ws";
 import { ClientsManager } from './model/clients';
 import { GameState, GameStateManager, Player } from './model/gameState';
-import { aiPositionUpdateHandler, assignTaskHandler, beeHatUpdateHandler, beeNameUpdateHandler, joinGameHandler, leaveLobbyHandler, playerPositionUpdateHandler, startGameHandler, taskCompleteHandler } from './model/socketMessageHandlers';
+import { aiPositionUpdateHandler, assignTaskHandler, beeHatUpdateHandler, beeNameUpdateHandler, joinGameHandler, leaveLobbyHandler, playerPositionUpdateHandler, startGameHandler, taskCompleteHandler, kickPlayerHandler } from './model/socketMessageHandlers';
 
 const app = express();
 
@@ -86,6 +86,9 @@ wss.on('connection', (ws: any) => { // This ws should have type WebSocket
 				break
 			case 'LEAVE_LOBBY':
 				leaveLobbyHandler(ws, data)
+				break
+			case 'KICK_PLAYER':
+				kickPlayerHandler(ws, data)
 				break
 			case 'ASSIGN_TASK':
 				assignTaskHandler(ws, data)

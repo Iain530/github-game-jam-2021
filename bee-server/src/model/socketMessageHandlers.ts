@@ -109,6 +109,26 @@ export const leaveLobbyHandler = (ws: WebSocket, data: any) => {
 	}
 }
 
+export const kickPlayerHandler = (ws: WebSocket, data: any) => {
+	const client = ClientsManager.instance.getClient(data.secretToken)
+	const game = GameStateManager.instance.getGameState(data.gameId)
+	if (client && game) {
+		if(game.players[0].id === client.playerId) {
+			const success = GameStateManager.instance.kickPlayerFromGame(data.gameId, data.playerId)
+			ws.send(JSON.stringify({
+				messageType: "KICK_PLAYER_RESPONSE",
+				success,
+			}))
+		} else {
+			ws.send(JSON.stringify({
+				messageType: "KICK_PLAYER_RESPONSE",
+				success: false,
+				error: "You are not the host of this game"
+			}))
+		}
+	}
+}
+
 export const assignTaskHandler = (ws: WebSocket, data: any) => {
 	const client = ClientsManager.instance.getClient(data.secretToken)
 	const success = GameStateManager.instance.assignTaskToPlayer(data.gameId, client.playerId, data.taskId)
