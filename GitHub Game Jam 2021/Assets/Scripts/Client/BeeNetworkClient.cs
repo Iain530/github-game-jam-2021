@@ -159,6 +159,9 @@ public class BeeNetworkClient : MonoBehaviour {
     }
 
     private async void OnApplicationQuit() {
-        await websocket.Close();
+        if (websocket != null) {
+            SendLeaveLobbyMessage();
+            await websocket.Close();
+        }
     }
 }
