@@ -15,10 +15,10 @@ public class StealCrownTaskBehaviour : TaskBehaviour, IPointerClickHandler
     // Start is called before the first frame update
     void Start()
     {
-        crown = this.gameObject.transform.FindChild("Canvas").FindChild("Crown").GetComponent<Image>();
+        crown = this.gameObject.transform.Find("Canvas").Find("Crown").GetComponent<Image>();
         
         laserSources = new List<GameObject>();
-        foreach (Transform child in this.gameObject.transform.FindChild("Canvas").transform) {
+        foreach (Transform child in this.gameObject.transform.Find("Canvas").transform) {
             if (child.tag == "TaskInteractable") {
                 laserSources.Add(child.gameObject);
             }
@@ -49,7 +49,7 @@ public class StealCrownTaskBehaviour : TaskBehaviour, IPointerClickHandler
                 reset();
             }
         } else if (clickTarget.tag == "TaskInteractable") {
-            clickTarget.transform.FindChild("Laser").gameObject.SetActive(false);
+            clickTarget.transform.Find("Laser").gameObject.SetActive(false);
             clickedLaserCount++;
         } else {
             reset();
@@ -62,7 +62,7 @@ public class StealCrownTaskBehaviour : TaskBehaviour, IPointerClickHandler
         foreach (Transform child in canvas.transform) {
             if (child.tag == "TaskInteractable") {
                 child.gameObject.SetActive(true);
-                child.transform.FindChild("Laser").gameObject.SetActive(true);
+                child.transform.Find("Laser").gameObject.SetActive(true);
             }
         }
     }
