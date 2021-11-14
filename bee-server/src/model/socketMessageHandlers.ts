@@ -56,7 +56,7 @@ export const aiPositionUpdateHandler = (ws: WebSocket, data: any) => {
 		if(game.players[0].id === client.playerId) {
 			for(const pos of data.beePositions) {
 				const {beeId, position: {x, y}} = pos
-				GameStateManager.instance.updateBeePosition(data.gameId, beeId, [x, y])
+				GameStateManager.instance.updateAIBeePosition(data.gameId, beeId, [x, y])
 				GameStateManager.instance.broadcastGameUpdates(data.gameId)
 			}
 			ws.send(JSON.stringify({
