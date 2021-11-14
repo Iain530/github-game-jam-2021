@@ -4,11 +4,22 @@
     return await response.json()
 	}
 
-	let gameState = fetchGameState()
+	let gameStateReq
+	let gameState
+	let loaded = false
 
+	let currentTime = Math.floor(new Date().getTime() / 1000)
+	
 	setInterval(async () => {
-		gameState = await fetchGameState()
-	}, 5000)
+		gameStateReq = await fetchGameState()
+		currentTime = Math.floor(new Date().getTime() / 1000)
+		gameState = gameStateReq.gameState
+		gameState.forEach(game => {
+			game.bees = [...game.players.map(player => player.bee), ...game.aiBees]
+			game.secsSinceLastUpdate = currentTime - game.lastUpdated
+		})
+		loaded = true
+	}, 1000)
 </script>
 
 <svelte:head>
@@ -19,38 +30,40 @@
 
 <main>
 	<h1>BEE Game Server Monitor</h1>
-	{#await gameState}
+	{#if !loaded}
 		<p>...waiting</p>
-	{:then data}
-		<h2>Games: {data.gameState.length}</h2>
-		{#each data.gameState as game}
-			<p>ID: {game.gameId} | Code: {game.gameCode} | Status: {game.gameStarted ? "Started" : "Not started"} </p>
+
+		
+	{:else}	
+		<h2>Games: {gameState.length}</h2>
+		{#each gameState as game}
+			<!-- <div style="min-width: 1080px; min-height: 768px; background-color: #000;">
+				{#each game.bees as bee}
+					<div style="position: relative; top: {bee.y+500}px; left: {bee.x+500}px; width: 10px; height: 10px; background-color: {bee.isPlayer ? "yellow" : "blue"};"></div>
+				{/each}
+			</div> -->
+			<h3>Game [last updated {game.secsSinceLastUpdate}s ago]</h3>
+			<p>Game ID: {game.gameId} | Code: {game.gameCode} | Status: {game.gameStarted ? "Started" : "Not started"} </p>
 			<p><b>Players</b>: {game.players.length}</p>
 			{#each game.players as player}
-				<p>ID: {player.id}</p>
+				<p>Player ID: {player.id} {#if player.isQueenBee}| <b>QUEEN</b> {/if}</p>
 				<p>Bee {JSON.stringify(player.bee)}</p>
+				<p><b>Player tasks</b>: {player.tasks.length}</p>
+				{#each player.tasks as task}
+					<p>Task ID: {task.id} | Completed: {task.complete}</p>
+				{/each}
 			{:else}
 				<p>No players</p>
 			{/each}
-			<p><b>Tasks</b>: {game.tasks.length}</p>
-			{#each game.tasks as task}
-				<p>ID: {task.id}</p>
-				<p>Completed: {task.completed}</p>
-			{/each}
 			<p><b>AI bees</b>: {game.aiBees.length}</p>
 			{#each game.aiBees as aiBee}
-				<p>ID: {aiBee.id}</p>
-				<p>Name: {aiBee.name}</p>
-				<p>Position: {aiBee.position[0]}, {aiBee.position[1]}</p>
+				<p>ID: {aiBee.id} | Name: {aiBee.name} | Hat: {aiBee.hatName} | Position: ({aiBee.position.x}, {aiBee.position.y})</p>
 			{/each}
 			<hr />
 		{:else}
 			<p>No games</p>
 		{/each}
-		
-	{:catch error}
-		<p>An error occurred!</p>
-	{/await}
+	{/if}
 </main>
 
 <style>

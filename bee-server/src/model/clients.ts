@@ -26,7 +26,7 @@ export class ClientsManager {
 		const newClient = new Client(clientId, playerID, client)
 		this.clients.set(clientId, newClient)
 
-		this.printClients()
+		// this.printClients()
 		return newClient
 	}
 
@@ -34,7 +34,7 @@ export class ClientsManager {
 		const client = this.getClient(clientId)
 		client.socket.close()
 		this.clients.delete(clientId)
-		this.printClients()
+		// this.printClients()
 	}
 
 	public getClient(clientId: string): Client {

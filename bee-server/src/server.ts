@@ -3,7 +3,7 @@ import * as http from 'http';
 import WebSocket, { Server } from "ws";
 import { ClientsManager } from './model/clients';
 import { GameState, GameStateManager, Player } from './model/gameState';
-import { aiPositionUpdateHandler, assignTaskHandler, beeHatUpdateHandler, beeNameUpdateHandler, joinGameHandler, leaveLobbyHandler, playerPositionUpdateHandler, startGameHandler, taskCompleteHandler, kickPlayerHandler } from './model/socketMessageHandlers';
+import { aiPositionUpdateHandler, beeHatUpdateHandler, beeNameUpdateHandler, joinGameHandler, leaveLobbyHandler, playerPositionUpdateHandler, startGameHandler, taskCompleteHandler, kickPlayerHandler, queenKillHandler} from './model/socketMessageHandlers';
 
 const app = express();
 
@@ -84,14 +84,14 @@ wss.on('connection', (ws: any) => { // This ws should have type WebSocket
 			case 'BEE_HAT_UPDATE':
 				beeHatUpdateHandler(ws, data)
 				break
-			case 'LEAVE_LOBBY':
+			case 'LEAVE_GAME_LOBBY':
 				leaveLobbyHandler(ws, data)
 				break
 			case 'KICK_PLAYER':
 				kickPlayerHandler(ws, data)
 				break
-			case 'ASSIGN_TASK':
-				assignTaskHandler(ws, data)
+			case 'QUEEN_KILL':
+				queenKillHandler(ws, data)
 				break
 			default:
 				console.error(`Unknown message type: ${data.messageType}`)
@@ -101,8 +101,12 @@ wss.on('connection', (ws: any) => { // This ws should have type WebSocket
 				}))
 				break
 		}
-	});
-});
+	})
+	
+	ws.on('close', () => {
+
+	})
+})
 
 //start our server
 server.listen(process.env.PORT || 8999, () => {
