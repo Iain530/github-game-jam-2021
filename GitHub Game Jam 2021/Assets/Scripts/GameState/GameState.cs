@@ -28,6 +28,17 @@ public class GameState {
         Bee bee = players.Find(player => player.bee.id == id).bee;
         return bee.position;
     }
+
+    public Task GetTaskWithId(string id) {
+        foreach (Player p in players) {
+            foreach (Task t in p.tasks) {
+                if (t.id == id) {
+                    return t;
+                }
+            }
+        }
+        return null;
+    }
 }
 
 

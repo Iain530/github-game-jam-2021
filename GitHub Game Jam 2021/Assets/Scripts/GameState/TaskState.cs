@@ -23,7 +23,7 @@ public class TaskState : MonoBehaviour {
     }
 
     public void OnGameStateUpdated() {
-        Task task = stateManager.state.tasks.Find(t => t.id == _id);
+        Task task = stateManager.state.GetTaskWithId(_id);
         if (task.complete && !taskBehaviour.isComplete()) {
             taskBehaviour.setComplete();
         }
