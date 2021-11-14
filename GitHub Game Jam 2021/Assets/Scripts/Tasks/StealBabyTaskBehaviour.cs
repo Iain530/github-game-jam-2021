@@ -8,14 +8,23 @@ public class StealBabyTaskBehaviour : TaskBehaviour, IPointerDownHandler, IPoint
 {
 
     private GameObject babyBeingDragged;
-    private GameObject box;
+    private Image box;
+    private List<GameObject> babyBees = new List<GameObject>();
+    private List<Vector3> initialBabyBeePositions = new List<Vector3>();
+    
     private int capturedBabiesCount;
-    private int numberOfBabies = 7;
+    private int numberOfBabies = 9;
 
     // Start is called before the first frame update
     void Start()
     {
-        crown = this.gameObject.transform.FindChild("Canvas").FindChild("Box").GetComponent<Image>();
+        box = this.gameObject.transform.FindChild("Canvas").FindChild("Box").GetComponent<Image>();
+        foreach (Transform child in this.gameObject.transform.Find("Canvas").transform) {
+            if (child.tag == "TaskInteractable") {
+                babyBees.Add(child.gameObject);
+                initialBabyBeePositions.Add(child.transform.position);
+            }
+        }
         
         base.Start();
     }
@@ -25,10 +34,15 @@ public class StealBabyTaskBehaviour : TaskBehaviour, IPointerDownHandler, IPoint
     {
         base.Update();
         
-        //if (babyBeingDragged != null && babyBeingDragged.transform.rect.Overlaps(box.transform.rect)) {
-          //  capturedBabiesCount++;
-            //babyBeingDragged.SetActive(false);
-        //}
+        if (Input.GetKeyDown("e")) {
+            reset();
+        }
+        
+        if (babyBeingDragged != null && box.GetComponent<BabyInBoxBehaviour>().getInBox() != null) {
+            babyBeingDragged.SetActive(false);
+            babyBeingDragged = null;
+            capturedBabiesCount++;
+        }
         
         if (capturedBabiesCount >= numberOfBabies) {
             completeTask();
@@ -53,6 +67,13 @@ public class StealBabyTaskBehaviour : TaskBehaviour, IPointerDownHandler, IPoint
     {
         if (babyBeingDragged != null) {
             babyBeingDragged.transform.position = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+        }
+    }
+    
+    private void reset() {
+        capturedBabiesCount = 0;
+        for (int i = 0; i < numberOfBabies; i++) {
+            babyBees[i].transform.position = initialBabyBeePositions[i];
         }
     }
 }
