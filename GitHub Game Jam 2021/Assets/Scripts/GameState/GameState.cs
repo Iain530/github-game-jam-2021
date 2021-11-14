@@ -25,12 +25,15 @@ public class GameState {
     public List<Player> players = new List<Player>();
 
     public Vector2 GetBeePosition(string id) {
+        return GetBee(id).position;
+    }
+
+    public Bee GetBee(string id) {
         Player player = players.Find(player => player.bee.id == id);
         if (player != null) {
-            return player.bee.position;
+            return player.bee;
         }
-        Bee bee = aiBees.Find(aiBee => aiBee.id == id);    
-        return bee.position;
+        return aiBees.Find(aiBee => aiBee.id == id);
     }
 
     public Task GetTaskWithId(string id) {

@@ -13,13 +13,16 @@ public class BeeNetworkClient : MonoBehaviour {
     public static BeeNetworkClient Instance { get { return _instance; } }
 
     public string lobbySceneName = "BeginGameMenu";
+    public string mainMenuScene = "NoirGameMenu";
 
-    WebSocket websocket;
-    int port = 8999;
-    string serverHostname = "192.168.0.48";
+    public string serverHostname = "192.168.0.48";
+    public int port = 8999;
+    public bool useHttps = false;
+    string Scheme { get { return useHttps ? "https://" : "http://"; } }
     string joinPath = "/joinGame";
     string createPath = "/createGame";
 
+    WebSocket websocket;
 
     string BuildWebsocketURL() {
         return "ws://" + serverHostname + ":" + port;
@@ -36,46 +39,30 @@ public class BeeNetworkClient : MonoBehaviour {
         }
     }
 
-    private void Start() {
-    }
-
     public void JoinGame(string gameCode) {
-        StartCoroutine(MakeJoinGameRequest(gameCode));
+        string url = BuildJoinURL(gameCode);
+        StartCoroutine(MakeLobbyRequest(url, false));
     }
 
     public void CreateGame() {
-        StartCoroutine(MakeCreateGameRequest());
+        string url = BuildCreateUrl();
+        StartCoroutine(MakeLobbyRequest(url, true));
     }
-
 
     string BuildJoinURL(string gameCode) {
-        return "http://" + serverHostname + ":" + port + joinPath + "?gameCode=" + gameCode;
+        return Scheme + serverHostname + ":" + port + joinPath + "?gameCode=" + gameCode;
     }
     string BuildCreateUrl() {
-        return "http://" + serverHostname + ":" + port + createPath;
+        return Scheme + serverHostname + ":" + port + createPath;
     }
 
-
-    IEnumerator MakeJoinGameRequest(string gameCode) {
-        UnityWebRequest www = UnityWebRequest.Get(BuildJoinURL(gameCode));
+    IEnumerator MakeLobbyRequest(string url, bool isRoomCreator) {
+        UnityWebRequest www = UnityWebRequest.Get(url);
         yield return www.SendWebRequest();
 
         if (www.result == UnityWebRequest.Result.Success) {
             ServerConnectResponse resp = JsonUtility.FromJson<ServerConnectResponse>(www.downloadHandler.text);
-            GameStateManager.Instance.JoinGame(resp.gameId, resp.playerId, resp.gameCode, false);
-            ConnectToWebSocket(resp.gameId, resp.playerId);
-        } else {
-            Debug.LogError(www.error);
-        }
-    }
-
-    IEnumerator MakeCreateGameRequest() {
-        UnityWebRequest www = UnityWebRequest.Get(BuildCreateUrl());
-        yield return www.SendWebRequest();
-
-        if (www.result == UnityWebRequest.Result.Success) {
-            ServerConnectResponse resp = JsonUtility.FromJson<ServerConnectResponse>(www.downloadHandler.text);
-            GameStateManager.Instance.JoinGame(resp.gameId, resp.playerId, resp.gameCode, true);
+            GameStateManager.Instance.JoinGame(resp.gameId, resp.playerId, resp.gameCode, isRoomCreator);
             ConnectToWebSocket(resp.gameId, resp.playerId);
         } else {
             Debug.LogError(www.error);
@@ -93,10 +80,12 @@ public class BeeNetworkClient : MonoBehaviour {
 
         websocket.OnError += (e) => {
             Debug.Log("Error! " + e);
+            ResetGame();
         };
 
         websocket.OnClose += (e) => {
             Debug.Log("Connection closed!");
+            ResetGame();
         };
 
         websocket.OnMessage += (bytes) => {
@@ -120,6 +109,17 @@ public class BeeNetworkClient : MonoBehaviour {
     #endif
     }
 
+    public void ResetGame() {
+        if (websocket != null && websocket.State == WebSocketState.Open) {
+            // TODO: send leave lobby message after it's merged in
+            websocket.Close();
+            return;  // websocket OnClose will re-call ResetGame()
+        }
+        GameStateManager.Instance.ResetState();
+        SceneManager.LoadScene(mainMenuScene);
+        websocket = null;
+    }
+
     public void BeginGame() {
         if (GameStateManager.Instance.IsRoomOwner) {
             SendJsonMessage(new BeginGameMessage());
@@ -138,10 +138,25 @@ public class BeeNetworkClient : MonoBehaviour {
         SendJsonMessage(message);
     }
 
-
     public void SendTaskComplete(string id) {
         var message = new TaskCompleteMessage(id);
         SendJsonMessage(message);
+    }
+
+    public void SendUpdateBeeNameMessage(string beeId, string newName) {
+        bool isPlayerBee = GameStateManager.Instance.state.GetBee(beeId).isPlayer;
+        var message = new UpdateBeeNameMessage(beeId, newName, isPlayerBee);
+        SendJsonMessage(message);
+    }
+
+    public void SendUpdateBeeHatMessage(string beeId, string newHat) {
+        bool isPlayerBee = GameStateManager.Instance.state.GetBee(beeId).isPlayer;
+        var message = new UpdateBeeHatMessage(beeId, newHat, isPlayerBee);
+        SendJsonMessage(message);
+    }
+
+    public void SendKickPlayerMessage(string playerId) {
+        SendJsonMessage(new KickPlayerMessage(playerId));
     }
 
     async void SendJsonMessage(object message) {
