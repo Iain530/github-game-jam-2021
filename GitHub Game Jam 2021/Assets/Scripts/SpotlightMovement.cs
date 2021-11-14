@@ -21,5 +21,6 @@ public class SpotlightMovement : MonoBehaviour
 
     void FixedUpdate()
     {
+        BeeNetworkClient.Instance.SendCurrentPosition(transform.position);
     }
 }
