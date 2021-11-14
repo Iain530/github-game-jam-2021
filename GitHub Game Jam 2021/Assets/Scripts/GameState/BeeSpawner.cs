@@ -7,6 +7,7 @@ public class BeeSpawner : MonoBehaviour {
     public GameObject playerBeePrefab;
     public GameObject otherBeePrefab;
     public GameObject aiBeePrefab;
+    public GameObject queenBeePrefab;
 
     GameStateManager stateManager;
     Dictionary<string, BeeState> bees = new Dictionary<string, BeeState>();
@@ -29,8 +30,12 @@ public class BeeSpawner : MonoBehaviour {
             GameObject instance;
             if (bee.isPlayer) {
                 if (stateManager.IsCurrentPlayer(bee.id)) {
+                    if (stateManager.GetCurrentPlayer().isQueenBee) {
+                        instance = Instantiate(queenBeePrefab, transform);
+                    } else {
+                        instance = Instantiate(playerBeePrefab, transform);
+                    }
                     // Spawn player bee
-                    instance = Instantiate(playerBeePrefab, transform);
                 } else {
                     // spawn other bee
                     instance = Instantiate(otherBeePrefab, transform);
