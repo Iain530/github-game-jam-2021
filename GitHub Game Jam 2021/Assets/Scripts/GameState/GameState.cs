@@ -18,7 +18,7 @@ public class GameStateUpdate {
 public class GameState {
     public string gameId;
     public string gameCode;
-    public int messageTime;
+    public int lastUpdated;
     public bool gameStarted;
     public List<Bee> aiBees = new List<Bee>();
     public List<Task> tasks = new List<Task>();

@@ -72,7 +72,7 @@ public class GameStateManager : MonoBehaviour {
                 SceneManager.LoadScene("Main");
             }
 
-            if (newState.messageTime >= _state.messageTime) {
+            if (newState.lastUpdated >= _state.lastUpdated) {
                 Debug.Log("Updated game state");
                 _state = newState;
                 GameStateUpdated?.Invoke();  // broadcast event
