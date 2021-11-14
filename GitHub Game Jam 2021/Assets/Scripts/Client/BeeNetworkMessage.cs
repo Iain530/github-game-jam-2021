@@ -16,6 +16,32 @@ public class JoinLobbyMessage {
 }
 
 [Serializable]
+public class LeaveLobbyMessage {
+    public string messageType = "LEAVE_GAME_LOBBY";
+    public string gameId;
+    public string secretToken;
+
+    public LeaveLobbyMessage() {
+        gameId = GameStateManager.Instance.CurrentGameID;
+        secretToken = GameStateManager.Instance.SecretToken;
+    }
+}
+
+[Serializable]
+public class KickPlayerMessage {
+    public string messageType = "KICK_PLAYER";
+    public string gameId;
+    public string secretToken;
+    public string playerId;
+
+    public KickPlayerMessage(string playerId) {
+        gameId = GameStateManager.Instance.CurrentGameID;
+        secretToken = GameStateManager.Instance.SecretToken;
+        this.playerId = playerId;
+    }
+}
+
+[Serializable]
 public class BeginGameMessage {
     public string messageType = "START_GAME";
     public string gameId;
@@ -57,6 +83,22 @@ public class TaskCompleteMessage {
     }
 }
 
+[Serializable]
+public class AssignTaskMessage {
+    public string messageType = "ASSIGN_TASK";
+    public string gameId;
+    public string secretToken;
+    public string playerId;
+    public string taskId;
+
+    public AssignTaskMessage(string taskId, string playerId) {
+        gameId = GameStateManager.Instance.CurrentGameID;
+        secretToken = GameStateManager.Instance.SecretToken;
+        this.taskId = taskId;
+        this.playerId = playerId;
+    } 
+}
+
 
 [Serializable]
 public class AiBeesPositionMessage {
@@ -72,6 +114,41 @@ public class AiBeesPositionMessage {
     }
 }
 
+[Serializable]
+public class UpdateBeeNameMessage {
+    public string messageType = "UPDATE_BEE_NAME";
+    public string gameId;
+    public string secretToken;
+    public string beeId;
+    public string name;
+    public bool isPlayerBee;
+
+    public UpdateBeeNameMessage(string beeId, string name, bool isPlayerBee) {
+        gameId = GameStateManager.Instance.CurrentGameID;
+        secretToken = GameStateManager.Instance.SecretToken;
+        this.beeId = beeId;
+        this.name = name;
+        this.isPlayerBee = isPlayerBee;
+    }
+}
+
+[Serializable]
+public class UpdateBeeHatMessage {
+    public string messageType = "UPDATE_BEE_HAT";
+    public string gameId;
+    public string secretToken;
+    public string beeId;
+    public string hat;
+    public bool isPlayerBee;
+
+    public UpdateBeeHatMessage(string beeId, string hat, bool isPlayerBee) {
+        gameId = GameStateManager.Instance.CurrentGameID;
+        secretToken = GameStateManager.Instance.SecretToken;
+        this.beeId = beeId;
+        this.hat = hat;
+        this.isPlayerBee = isPlayerBee;
+    }
+}
 
 [Serializable]
 public class BeePosition {
