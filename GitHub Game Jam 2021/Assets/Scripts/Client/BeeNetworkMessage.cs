@@ -65,9 +65,9 @@ public class AiBeesPositionMessage {
     public string messageType = "AI_POSITION_UPDATE";
     public string gameId;
     public string secretToken;
-    public Dictionary<string, BeePosition> beePositions = new Dictionary<string, BeePosition>();
+    public List<BeePosition> beePositions = new List<BeePosition>();
 
-    public AiBeesPositionMessage(Dictionary<string, BeePosition> beePositions) {
+    public AiBeesPositionMessage(List<BeePosition> beePositions) {
         gameId = GameStateManager.Instance.CurrentGameID;
         secretToken = GameStateManager.Instance.SecretToken;
         this.beePositions = beePositions;
