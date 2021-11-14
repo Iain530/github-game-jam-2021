@@ -15,8 +15,6 @@ public class GameStateManager : MonoBehaviour {
     private string _secretToken;
     private bool _isRoomOwner;
 
-    int ids;
-
     public GameState state { get { return _state; } }
     public string CurrentPlayerId { get { return _currentPlayerId; } }
     public string CurrentGameID { get { return _currentGameId; } }
