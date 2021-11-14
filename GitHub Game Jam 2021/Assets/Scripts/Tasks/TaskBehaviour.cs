@@ -10,7 +10,7 @@ public class TaskBehaviour : MonoBehaviour
     private TaskState taskState;
     
     protected bool playerPresent;
-    private bool uiVisible;
+    protected bool uiVisible;
     protected bool complete;
 
     // Start is called before the first frame update
