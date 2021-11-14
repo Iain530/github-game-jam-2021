@@ -40,6 +40,8 @@ public class TaskState : MonoBehaviour {
     }
 
     private void OnDestroy() {
-        stateManager.GameStateUpdated -= OnGameStateUpdated;
+        if (stateManager != null) {
+            stateManager.GameStateUpdated -= OnGameStateUpdated;
+        }
     }
 }

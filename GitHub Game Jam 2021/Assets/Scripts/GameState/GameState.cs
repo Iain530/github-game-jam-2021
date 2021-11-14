@@ -18,17 +18,18 @@ public class GameStateUpdate {
 public class GameState {
     public string gameId;
     public string gameCode;
-    public int messageTime;
+    public int lastUpdated;
     public bool gameStarted;
     public List<Bee> aiBees = new List<Bee>();
     public List<Task> tasks = new List<Task>();
     public List<Player> players = new List<Player>();
 
-    public Vector2? GetBeePosition(string id) {
-        Bee bee = players.Find(player => player.bee.id == id).bee;
-        if (bee == null) {
-            bee = aiBees.Find(aiBee => aiBee.id == id);
+    public Vector2 GetBeePosition(string id) {
+        Player player = players.Find(player => player.bee.id == id);
+        if (player != null) {
+            return player.bee.position;
         }
+        Bee bee = aiBees.Find(aiBee => aiBee.id == id);    
         return bee.position;
     }
 

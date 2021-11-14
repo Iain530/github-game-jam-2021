@@ -130,7 +130,7 @@ public class BeeNetworkClient : MonoBehaviour {
 
     public void SendAiBeePositions(List<BeeState> bees) {
         var message = new AiBeesPositionMessage(
-            bees.Select(bee => new BeePosition(bee.Id, bee.GetPosition())).ToDictionary(bp => bp.id, bp => bp)
+            bees.Select(bee => new BeePosition(bee.Id, bee.GetPosition())).ToList()
         );
         SendJsonMessage(message);
     }
