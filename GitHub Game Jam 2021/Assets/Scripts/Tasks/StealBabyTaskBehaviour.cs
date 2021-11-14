@@ -18,7 +18,7 @@ public class StealBabyTaskBehaviour : TaskBehaviour, IPointerDownHandler, IPoint
     // Start is called before the first frame update
     void Start()
     {
-        box = this.gameObject.transform.FindChild("Canvas").FindChild("Box").GetComponent<Image>();
+        box = this.gameObject.transform.Find("Canvas").Find("Box").GetComponent<Image>();
         foreach (Transform child in this.gameObject.transform.Find("Canvas").transform) {
             if (child.tag == "TaskInteractable") {
                 babyBees.Add(child.gameObject);
