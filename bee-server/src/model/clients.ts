@@ -26,8 +26,15 @@ export class ClientsManager {
 		const newClient = new Client(clientId, playerID, client)
 		this.clients.set(clientId, newClient)
 
-		this.printClients()
+		// this.printClients()
 		return newClient
+	}
+
+	public removeClient(clientId: string): void {
+		const client = this.getClient(clientId)
+		client.socket.close()
+		this.clients.delete(clientId)
+		// this.printClients()
 	}
 
 	public getClient(clientId: string): Client {

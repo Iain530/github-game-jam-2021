@@ -9,7 +9,18 @@ export class GameStateManager {
 		}
 		GameStateManager._instance = this
 
-		this.printGameStates()
+		// Garbage collection interval for inactive game states
+		setInterval(() => {
+			const currentTime = currentUnixTimestamp()
+			for (const gameState of this.gameStates.values()) {
+				const cleanupThreshold = gameState.gameStarted ? 30 : 60 * 2
+				if(currentTime - gameState.lastUpdated > cleanupThreshold) {
+					this.deleteGameState(gameState.gameId)
+				}
+			}
+		}, 10000)
+
+		// this.printGameStates()
 	}
 	public static get instance(): GameStateManager {
 		return this._instance
@@ -28,7 +39,7 @@ export class GameStateManager {
 		const gameState = new GameState(hostPlayer)
 		this.gameStates.set(gameState.gameId, gameState)
 
-		this.printGameStates()
+		// this.printGameStates()
 		return gameState
 	}
 
@@ -50,13 +61,39 @@ export class GameStateManager {
 		}
 	}
 
-	public startGame(gameId: any) {
+	public startGame(gameId: any, taskIds: string[]): void {
 		const gameState = this.getGameState(gameId)
 		gameState.gameStarted = true
+		// assign AI bees
+		const aiBeeCount = 10 + getRandomInt(5) - gameState.players.length
+		for(let i = 0; i < aiBeeCount; i++) {
+			const bee = new Bee(false)
+			bee.name = 'AI Bee ' + (i + 1)
+			gameState.aiBees.push(bee)
+		}
+
+		// assign random queen
+		const randomQueen = Math.floor(Math.random() * gameState.players.length)
+		gameState.players[randomQueen].isQueenBee = true
+		gameState.players[randomQueen].bee.hatName = "Crown"
+
+		const tasksPerPlayer = Math.floor(taskIds.length / gameState.players.length -1)
+		const shuffledTasks = taskIds.map((value) => ({ value, sort: Math.random() }))
+																.sort((a, b) => a.sort - b.sort)
+																.map(({ value }) => value)
+		// assign tasks to players
+		for(let i = 0; i < gameState.players.length; i++) {
+			const player = gameState.players[i]
+			if(player.isQueenBee) continue
+			for(let j = 0; j < tasksPerPlayer; j++) {
+				player.tasks.push(new Task(shuffledTasks.pop()))
+			}
+		}
+
 		gameState.broadcastToPlayers()
 	}
 
-	public updatePlayerPosition(gameId: string, playerId: string, pos: [number, number]): boolean {
+	public updatePlayerPosition(gameId: string, playerId: string, pos: {x:number,y:number}): boolean {
 		const gameState = this.getGameState(gameId)
 		const player = gameState.players.find(player => player.id === playerId)
 		player.bee.position = pos
@@ -67,8 +104,9 @@ export class GameStateManager {
 	public completeTask(gameId: string, playerId: string, taskId: string): boolean {
 		const gameState = this.getGameState(gameId)
 		const player = gameState.players.find(player => player.id === playerId)
-		if(gameState.tasks[player.currentTaskIndex].id == taskId) {
-			gameState.tasks.find(task => task.id === taskId).complete = true
+		const task = player.tasks.find(task => task.id === taskId)
+		if(task) {
+			task.complete = true
 			gameState.broadcastToPlayers()	
 			return true
 		} else {
@@ -86,15 +124,19 @@ export class GameStateManager {
 		gameState.players.push(player)
 
 		gameState.broadcastToPlayers()
-		this.printGameStates()
+		// this.printGameStates()
 		return gameState
 	}
 
-	public updateAIBeePosition(gameId: string, beeId: string, pos: [number, number]): void {
+	public updateAIBeePosition(gameId: string, beeId: string, pos:{x:number, y:number}): boolean {
 		const gameState = this.getGameState(gameId)
 		const bee = gameState.aiBees.find(bee => bee.id === beeId)
-		bee.position = pos
-		gameState.broadcastToPlayers()
+		if(bee) {
+			bee.position = pos
+			gameState.broadcastToPlayers()
+			return true
+		} 
+		return false
 	}
 
 	public broadcastGameUpdates(gameId: string): void {
@@ -103,25 +145,111 @@ export class GameStateManager {
 	}
 
 	public deleteGameState(id: string): void {
-		this.printGameStates()
+		// this.printGameStates()
+		this.getGameState(id).cleanGameSockets()
 		this.gameStates.delete(id)
 	}
+
+	public updateBeeName(gameId: string, beeId: string, name: string, isPlayerBee: boolean): boolean {
+		const gameState = this.getGameState(gameId)
+		if(isPlayerBee) {
+			const player = gameState.players.find(player => player.bee.id === beeId)
+			player.bee.name = name
+		} else {
+			const bee = gameState.aiBees.find(bee => bee.id === beeId)
+			bee.name = name
+		}
+
+		gameState.broadcastToPlayers()
+		return true
+	}
+
+	public updateBeeHat(gameId: string, beeId: string, hat: string, isPlayerBee: boolean): boolean {
+		const gameState = this.getGameState(gameId)
+		if(isPlayerBee) {
+			const player = gameState.players.find(player => player.bee.id === beeId)
+			player.bee.hatName = hat
+		} else {
+			const bee = gameState.aiBees.find(bee => bee.id === beeId)
+			bee.hatName = hat
+		}
+
+		gameState.broadcastToPlayers()
+		return true
+	}
+
+	public unregisterPlayerFromGame(gameId: string, playerId: string): void {
+		const gameState = this.getGameState(gameId)
+		const player = gameState.players.find(player => player.id === playerId)
+		gameState.players.splice(gameState.players.indexOf(player), 1)
+		gameState.broadcastToPlayers()
+	}
+
+	public kickPlayerFromGame(gameId: string, playerId: string): boolean {
+		const gameState = this.getGameState(gameId)
+		const player = gameState.players.find(player => player.id === playerId)
+		gameState.players.splice(gameState.players.indexOf(player), 1)
+		gameState.broadcastToPlayers()
+		return true
+	}
+	
+	// Not used
+	// public assignTaskToPlayer(gameId: string, playerId: string, taskId: string): boolean {
+	// 	const gameState = this.getGameState(gameId)
+	// 	const player = gameState.players.find(player => player.id === playerId)
+	// 	player.currentTaskIndex = gameState.tasks.findIndex(task => task.id === taskId)
+	// 	gameState.broadcastToPlayers()
+	// 	return true
+	// }
+
+	public queenKill(gameId, queenPlayerId, targetBeeId): boolean {
+		const gameState = this.getGameState(gameId)
+		const queenPlayer = gameState.players.find(player => player.id === queenPlayerId)
+		if(!queenPlayer.isQueenBee) {
+			console.error('Player is not queen bee')
+			return false
+		}
+		for(const player of gameState.players) {
+			if(player.bee.id === targetBeeId) {
+				player.bee.alive = false
+				return true
+			}
+		}
+		const targetBee = gameState.aiBees.find(bee => bee.id === targetBeeId)
+		if(targetBee) {
+			targetBee.alive = false
+			gameState.broadcastToPlayers()
+			return true
+		}
+		return false
+	}
+}
+
+function currentUnixTimestamp(): number {
+	return Math.floor(new Date().getTime() / 1000)
 }
 
 export class GameState {
 	gameId: string = uuidv4()
-	messageTime: number = Math.round((new Date()).getTime() / 1000)
+	lastUpdated: number = currentUnixTimestamp()
 	gameCode: string = makeFourLetterID()
 	gameStarted: boolean = false
 	aiBees: Bee[] = []
-	tasks: Task[] = []
 	players: Player[]
 
 	constructor(hostPlayer: Player) {
 		this.players = [hostPlayer]
 	}
 
+	cleanGameSockets() {
+		this.players.forEach(player => {
+			const client = ClientsManager.instance.getClientByPlayerID(player.id)
+			if(client) client.socket.close
+		})
+	}
+
 	broadcastToPlayers() {
+		this.lastUpdated = currentUnixTimestamp()
 		for(const player of this.players) {
 			ClientsManager.instance.updateGameStateForPlayer(player.id, this)
 		}
@@ -138,21 +266,27 @@ export class Task {
 }
 
 export class Bee {
+	static aiHatNames: string[] = ["Construction", "Fedora", "Popo", "Santa", "Suess", "Sorting",	"Tophat"]
 	id: string = uuidv4()
 	name: string = "Newbie"
 	hatName: string = "Newbie"
-	position: [number, number] = [0,0]
+	position: {x: number, y: number} = {x: 0, y: 0}
 	isPlayer: boolean
+	alive: boolean = true
 
 	constructor(isPlayer: boolean) {
 		this.isPlayer = isPlayer
+
+		if(!isPlayer) {
+			this.hatName = Bee.aiHatNames[getRandomInt(Bee.aiHatNames.length)]
+		}
 	}
 }
 
 export class Player {
 	id: string = uuidv4()
 	bee: Bee = new Bee(true)
-	currentTaskIndex: number = -1
+	tasks: Task[] = []
 	isQueenBee: boolean = false
 }
 
@@ -164,4 +298,8 @@ function makeFourLetterID(): string {
     text += possible.charAt(Math.floor(Math.random() * possible.length))
 
   return text
+}
+
+function getRandomInt(max) {
+  return Math.floor(Math.random() * max);
 }
