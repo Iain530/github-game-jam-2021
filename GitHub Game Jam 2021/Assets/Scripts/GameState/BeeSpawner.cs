@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cinemachine;
 
 public class BeeSpawner : MonoBehaviour {
 
@@ -8,6 +9,8 @@ public class BeeSpawner : MonoBehaviour {
     public GameObject otherBeePrefab;
     public GameObject aiBeePrefab;
     public GameObject queenBeePrefab;
+
+    public CinemachineVirtualCamera camera;
 
     GameStateManager stateManager;
     Dictionary<string, BeeState> bees = new Dictionary<string, BeeState>();
@@ -38,6 +41,7 @@ public class BeeSpawner : MonoBehaviour {
                     } else {
                         instance = Instantiate(playerBeePrefab, transform);
                     }
+                    camera.Follow = instance.transform;
                 } else {
                     // spawn other bee
                     instance = Instantiate(otherBeePrefab, transform);
@@ -45,7 +49,7 @@ public class BeeSpawner : MonoBehaviour {
             } else if (stateManager.IsRoomOwner) {
                 Debug.Log("Attempting to spawn AI bees");
                 instance = Instantiate(aiBeePrefab, transform);
-                Debug.Break();
+                // Debug.Break();
             } else {
                 instance = Instantiate(otherBeePrefab, transform);
             }
