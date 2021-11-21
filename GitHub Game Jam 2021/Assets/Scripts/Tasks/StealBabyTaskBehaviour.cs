@@ -16,7 +16,7 @@ public class StealBabyTaskBehaviour : TaskBehaviour, IPointerDownHandler, IPoint
     private int numberOfBabies = 9;
 
     // Start is called before the first frame update
-    void Start()
+    new void Start()
     {
         box = this.gameObject.transform.Find("Canvas").Find("Box").GetComponent<Image>();
         foreach (Transform child in this.gameObject.transform.Find("Canvas").transform) {
@@ -30,7 +30,7 @@ public class StealBabyTaskBehaviour : TaskBehaviour, IPointerDownHandler, IPoint
     }
 
     // Update is called once per frame
-    void Update()
+    new void Update()
     {
         base.Update();
         

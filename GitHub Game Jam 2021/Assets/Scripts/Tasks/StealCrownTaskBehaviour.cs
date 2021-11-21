@@ -13,7 +13,7 @@ public class StealCrownTaskBehaviour : TaskBehaviour, IPointerClickHandler
     private int clickedLaserCount;
 
     // Start is called before the first frame update
-    void Start()
+    new void Start()
     {
         crown = this.gameObject.transform.Find("Canvas").Find("Crown").GetComponent<Image>();
         
@@ -29,7 +29,7 @@ public class StealCrownTaskBehaviour : TaskBehaviour, IPointerClickHandler
     }
 
     // Update is called once per frame
-    void Update()
+    new void Update()
     {
         base.Update();
         

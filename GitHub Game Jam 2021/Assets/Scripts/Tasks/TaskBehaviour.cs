@@ -8,6 +8,7 @@ public class TaskBehaviour : MonoBehaviour
 
     protected Transform canvas;
     private TaskState taskState;
+    private SpriteRenderer sprite;
     
     protected bool playerPresent;
     protected bool uiVisible;
@@ -17,7 +18,8 @@ public class TaskBehaviour : MonoBehaviour
     protected void Start()
     {
         taskState = GetComponent<TaskState>();
-        canvas = this.gameObject.transform.Find("Canvas");
+        canvas = gameObject.transform.Find("Canvas");
+        sprite = GetComponent<SpriteRenderer>();
         hideUI();
     }
 
@@ -74,5 +76,6 @@ public class TaskBehaviour : MonoBehaviour
     protected void completeTask() {
     	setComplete();
         taskState.OnComplete();
+        sprite.enabled = false;
     }
 }
