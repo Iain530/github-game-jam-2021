@@ -12,14 +12,14 @@ public class PressSpaceTaskBehaviour : TaskBehaviour
     private int spacePressCount = 0;
 
     // Start is called before the first frame update
-    void Start()
+    new void Start()
     {
         spaceCountText = this.gameObject.transform.Find("Canvas").Find("Space Count").GetComponent<Text>();
         base.Start();
     }
 
     // Update is called once per frame
-    void Update()
+    new void Update()
     {
         base.Update();
         
@@ -38,13 +38,6 @@ public class PressSpaceTaskBehaviour : TaskBehaviour
             	spaceCountText.text = spacePressCount + " / " + spacePressCountTarget;
             }
         }
-    }
-    
-    private void OnTriggerExit2D(Collider2D other)
-    {
-        base.OnTriggerExit2D(other);
-        if (complete) return;
-        reset();
     }
     
     private void reset() {
