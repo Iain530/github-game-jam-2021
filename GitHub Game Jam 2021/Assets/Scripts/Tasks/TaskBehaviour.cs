@@ -8,7 +8,9 @@ public class TaskBehaviour : MonoBehaviour
 
     protected Transform canvas;
     private TaskState taskState;
-    private SpriteRenderer sprite;
+    public Sprite completeSprite;
+    private SpriteRenderer[] spriteRenderers;
+    private ParticleSystem[] particleSystems;
     
     protected bool playerPresent;
     protected bool uiVisible;
@@ -19,7 +21,8 @@ public class TaskBehaviour : MonoBehaviour
     {
         taskState = GetComponent<TaskState>();
         canvas = gameObject.transform.Find("Canvas");
-        sprite = GetComponent<SpriteRenderer>();
+        spriteRenderers = GetComponentsInChildren<SpriteRenderer>();
+        particleSystems = GetComponentsInChildren<ParticleSystem>();
         hideUI();
     }
 
@@ -76,6 +79,11 @@ public class TaskBehaviour : MonoBehaviour
     protected void completeTask() {
     	setComplete();
         taskState.OnComplete();
-        sprite.enabled = false;
+        foreach (SpriteRenderer spriteRenderer in spriteRenderers) {
+            spriteRenderer.sprite = completeSprite;
+        }
+        foreach (ParticleSystem particleSystem in particleSystems) {
+            particleSystem.Stop();
+        }
     }
 }
