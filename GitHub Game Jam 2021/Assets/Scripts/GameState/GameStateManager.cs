@@ -36,6 +36,15 @@ public class GameStateManager : MonoBehaviour {
         }
     }
 
+    public void ResetState() {
+        _state = new GameState();
+        _currentPlayerId = null;
+        _currentGameId = null;
+        _currentGameCode = null;
+        _secretToken = null;
+        _isRoomOwner = false;
+    }
+
 
     public void JoinGame(string gameId, string playerId, string gameCode, bool isRoomOwner) {
         Debug.Log("player id: " + playerId + " game id: " + gameId + " game code: " + gameCode);
